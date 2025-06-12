@@ -1,0 +1,43 @@
+# ----------------------
+# 🔧 Node / pnpm
+# ----------------------
+node_modules/
+pnpm-lock.yaml
+
+# ----------------------
+# 🛠️ Build artifacts
+# ----------------------
+dist/
+*.log
+
+# ----------------------
+# 📚 Storybook
+# ----------------------
+storybook-static/
+out/
+
+# ----------------------
+# 🧪 Test snapshots / coverage
+# ----------------------
+coverage/
+*.lcov
+
+# ----------------------
+# 📦 Local VSCode & system files
+# ----------------------
+.vscode/
+.DS_Store
+.env*
+*.swp
+
+# ----------------------
+# ⚙️ TypeScript
+# ----------------------
+*.tsbuildinfo
+
+# ----------------------
+# ✍️ IDE / OS
+# ----------------------
+.idea/
+*.iml
+Thumbs.db

@@ -36,26 +36,28 @@ export const FormFieldRenderer: React.FC<Props> = ({ field }) => {
             return <textarea {...commonProps} />;
 
           case 'checkbox':
-            return <input type="checkbox" {...commonProps} defaultChecked={defaultValue} value="on" />;
+            return (
+              <input type="checkbox" {...commonProps} defaultChecked={defaultValue} value="on" />
+            );
 
-            case 'radio':
-                return (
-                  <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
-                    <legend style={{ fontWeight: 500, marginBottom: 8 }}>{label}</legend>
-                    {field.options.map((opt) => (
-                      <label key={opt.value} style={{ display: 'block', marginBottom: 4 }}>
-                        <input 
-                          type="radio" 
-                          name={name} 
-                          value={opt.value}
-                          defaultChecked={defaultValue === opt.value}
-                          disabled={disabled}
-                        />
-                        {opt.label}
-                      </label>
-                    ))}
-                  </fieldset>
-                );
+          case 'radio':
+            return (
+              <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
+                <legend style={{ fontWeight: 500, marginBottom: 8 }}>{label}</legend>
+                {field.options.map((opt) => (
+                  <label key={opt.value} style={{ display: 'block', marginBottom: 4 }}>
+                    <input
+                      type="radio"
+                      name={name}
+                      value={opt.value}
+                      defaultChecked={defaultValue === opt.value}
+                      disabled={disabled}
+                    />
+                    {opt.label}
+                  </label>
+                ))}
+              </fieldset>
+            );
 
           case 'select':
             return (

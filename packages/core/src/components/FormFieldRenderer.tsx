@@ -1,11 +1,14 @@
 import React from 'react';
 import type { FormField } from '../types/schema';
+import type { Control } from 'react-hook-form';
 
 interface Props {
   field: FormField;
+  control: Control<any>;
+  error?: string;
 }
 
-export const FormFieldRenderer: React.FC<Props> = ({ field }) => {
+export const FormFieldRenderer: React.FC<Props> = ({ field, error }) => {
   const { name, label, type, required, placeholder, disabled, defaultValue } = field;
 
   const commonProps = {
@@ -74,6 +77,7 @@ export const FormFieldRenderer: React.FC<Props> = ({ field }) => {
             return <div>지원하지 않는 필드 타입입니다: {type}</div>;
         }
       })()}
+      {error && <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>{error}</p>}
     </div>
   );
 };

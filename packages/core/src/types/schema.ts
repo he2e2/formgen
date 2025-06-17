@@ -42,10 +42,6 @@ export interface DateField extends BaseField {
   max?: string;
 }
 
-export type FormField =
-  | TextField
-  | CheckboxField
-  | SelectField
-  | DateField;
+export type FormField = TextField | CheckboxField | SelectField | DateField;
 
 export type FormSchema = FormField[];

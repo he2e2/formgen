@@ -39,8 +39,7 @@ export const BasicForm: Story = {
           { label: '미국', value: 'us' },
         ],
       },
-      { type: 'checkbox', name: 'agree1', label: '약관 동의', required: true },
-      { type: 'checkbox', name: 'agree2', label: '약관 동의' },
+      { type: 'checkbox', name: 'check', label: '체크' },
       {
         type: 'checkbox',
         name: 'agree3',
@@ -52,28 +51,9 @@ export const BasicForm: Story = {
         required: true,
       },
       {
-        type: 'checkbox',
-        name: 'agree4',
-        label: '약관 동의',
-        options: [
-          { label: '서비스 약관', value: 'terms' },
-          { label: '개인정보 처리방침', value: 'privacy' },
-        ],
-      },
-      {
         type: 'radio',
         name: 'sex',
         label: '성별',
-        options: [
-          { label: '남성', value: 'man' },
-          { label: '여성', value: 'woman' },
-        ],
-      },
-      {
-        type: 'radio',
-        name: 'sex2',
-        label: '성별',
-        required: true,
         options: [
           { label: '남성', value: 'man' },
           { label: '여성', value: 'woman' },

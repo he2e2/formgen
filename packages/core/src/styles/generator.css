@@ -1,0 +1,46 @@
+.formgen-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.formgen-fieldset {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.formgen-legend {
+  font-weight: bold;
+  padding: 0 0.5rem;
+}
+
+.formgen-label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.formgen-label span {
+  font-weight: normal;
+  line-height: 1;
+  align-self: center;
+}
+
+.formgen-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.formgen-error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import type { FormField } from '../types/schema';
 import { generateZodSchema } from '../lib/zodGenerator';
 import { FormFieldRenderer } from './FormFieldRenderer';
@@ -7,9 +8,24 @@ import { FormFieldRenderer } from './FormFieldRenderer';
 interface Props {
   schema: FormField[];
   onSubmit: (data: Record<string, any>) => void;
+  fieldWrapperClassName?: string;
+  fieldsetClassName?: string;
+  legendClassName?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+  errorClassName?: string;
 }
 
-export const FormGenerator: React.FC<Props> = ({ schema, onSubmit }) => {
+export const FormGenerator: React.FC<Props> = ({
+  schema,
+  onSubmit,
+  fieldWrapperClassName,
+  fieldsetClassName,
+  legendClassName,
+  labelClassName,
+  inputClassName,
+  errorClassName,
+}) => {
   const zodSchema = generateZodSchema(schema);
 
   const defaultValues = Object.fromEntries(
@@ -39,6 +55,12 @@ export const FormGenerator: React.FC<Props> = ({ schema, onSubmit }) => {
           field={field}
           error={errors[field.name]?.message as string}
           control={control}
+          fieldWrapperClassName={fieldWrapperClassName}
+          fieldsetClassName={fieldsetClassName}
+          legendClassName={legendClassName}
+          labelClassName={labelClassName}
+          inputClassName={inputClassName}
+          errorClassName={errorClassName}
         />
       ))}
       <button type="submit">제출</button>

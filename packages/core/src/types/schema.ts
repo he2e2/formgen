@@ -27,13 +27,9 @@ export interface TextField extends BaseField {
   pattern?: string;
 }
 
-export interface CheckboxField extends BaseField {
-  type: 'checkbox';
-}
-
-export interface SelectField extends BaseField {
-  type: 'select' | 'radio';
-  options: { label: string; value: string }[];
+export interface ChoiceField extends BaseField {
+  type: 'select' | 'radio' | 'checkbox';
+  options?: { label: string; value: string }[];
 }
 
 export interface DateField extends BaseField {
@@ -42,6 +38,6 @@ export interface DateField extends BaseField {
   max?: string;
 }
 
-export type FormField = TextField | CheckboxField | SelectField | DateField;
+export type FormField = TextField | ChoiceField | DateField;
 
 export type FormSchema = FormField[];

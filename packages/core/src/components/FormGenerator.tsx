@@ -1,4 +1,4 @@
-import { useForm, Control } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormField } from '../types/schema';
 import { generateZodSchema } from '../lib/zodGenerator';
@@ -12,7 +12,15 @@ interface Props {
 export const FormGenerator: React.FC<Props> = ({ schema, onSubmit }) => {
   const zodSchema = generateZodSchema(schema);
 
-  const defaultValues = Object.fromEntries(schema.map((f) => [f.name, f.defaultValue ?? '']));
+  const defaultValues = Object.fromEntries(
+    schema.map((f) => {
+      if (f.type === 'checkbox') {
+        const isMulti = Array.isArray((f as any).options) && (f as any).options.length > 0;
+        return [f.name, f.defaultValue ?? (isMulti ? [] : false)];
+      }
+      return [f.name, f.defaultValue ?? ''];
+    }),
+  );
 
   const {
     control,

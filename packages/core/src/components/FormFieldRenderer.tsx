@@ -19,7 +19,7 @@ export const FormFieldRenderer: React.FC<Props> = ({ field, control, error }) =>
       </label>
 
       {(() => {
-        switch (field.type) {
+        switch (type) {
           case 'text':
           case 'email':
           case 'password':
@@ -54,24 +54,61 @@ export const FormFieldRenderer: React.FC<Props> = ({ field, control, error }) =>
               />
             );
 
-          case 'checkbox':
+          case 'checkbox': {
+            const { options } = field;
+            if (options && options.length > 0) {
+              return (
+                <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
+                  <Controller
+                    name={name}
+                    control={control}
+                    defaultValue={defaultValue ?? []}
+                    render={({ field: { value, onChange } }) => (
+                      <>
+                        {field.options!.map((opt) => (
+                          <label key={opt.value} style={{ display: 'block', marginBottom: 4 }}>
+                            <input
+                              type="checkbox"
+                              value={opt.value}
+                              checked={value?.includes(opt.value)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  onChange([...(value || []), opt.value]);
+                                } else {
+                                  onChange(value.filter((v: string) => v !== opt.value));
+                                }
+                              }}
+                              disabled={disabled}
+                            />
+                            {opt.label}
+                          </label>
+                        ))}
+                      </>
+                    )}
+                  />
+                </fieldset>
+              );
+            }
+
             return (
               <Controller
                 name={name}
                 control={control}
                 defaultValue={defaultValue ?? false}
-                render={({ field }) => (
+                render={({ field: { value, onChange, ref } }) => (
                   <input
-                    type="checkbox"
                     id={name}
+                    name={name}
+                    type="checkbox"
+                    checked={!!value}
+                    onChange={(e) => onChange(e.target.checked)}
                     disabled={disabled}
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                    ref={field.ref}
+                    ref={ref}
                   />
                 )}
               />
             );
+          }
 
           case 'radio': {
             const { options } = field;
@@ -82,8 +119,7 @@ export const FormFieldRenderer: React.FC<Props> = ({ field, control, error }) =>
                 defaultValue={defaultValue ?? ''}
                 render={({ field }) => (
                   <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
-                    <legend style={{ fontWeight: 500, marginBottom: 8 }}>{label}</legend>
-                    {options.map((opt) => (
+                    {options?.map((opt) => (
                       <label key={opt.value} style={{ display: 'block', marginBottom: 4 }}>
                         <input
                           type="radio"
@@ -110,7 +146,7 @@ export const FormFieldRenderer: React.FC<Props> = ({ field, control, error }) =>
                 defaultValue={defaultValue ?? ''}
                 render={({ field }) => (
                   <select id={name} disabled={disabled} {...field}>
-                    {options.map((opt) => (
+                    {options?.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>

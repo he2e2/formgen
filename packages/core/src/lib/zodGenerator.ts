@@ -5,63 +5,71 @@ export function generateZodSchema(schema: FormSchema) {
   const shape: Record<string, z.ZodTypeAny> = {};
 
   schema.forEach((field) => {
-    switch (field.type) {
+    const { name, label, required, type } = field;
+
+    switch (type) {
       case 'text':
       case 'textarea':
       case 'password': {
         const base = z.string();
-        shape[field.name] = field.required
-          ? base.min(1, `${field.label}은(는) 필수입니다.`)
-          : base.optional();
+        shape[name] = required ? base.min(1, `${label}은(는) 필수입니다.`) : base.optional();
         break;
       }
 
       case 'email': {
-        const base = z.string().email(`${field.label} 형식이 올바르지 않습니다.`);
-        shape[field.name] = field.required ? base : base.optional();
+        const base = z.string().email(`${label} 형식이 올바르지 않습니다.`);
+        shape[name] = required ? base : base.optional();
         break;
       }
 
       case 'number': {
         const base = z
           .string()
-          .min(1, `${field.label}은(는) 필수입니다.`)
+          .min(1, `${label}은(는) 필수입니다.`)
           .refine((val) => val === '' || !isNaN(Number(val)), {
-            message: `${field.label}은(는) 숫자여야 합니다.`,
+            message: `${label}은(는) 숫자여야 합니다.`,
           });
-        shape[field.name] = field.required ? base : base.optional();
+        shape[name] = required ? base : base.optional();
         break;
       }
 
       case 'select':
-      case 'radio': {
-        const base = z.string();
-        shape[field.name] = field.required
-          ? base.min(1, `${field.label}을(를) 선택하세요.`)
-          : base.optional();
-        break;
-      }
-
+      case 'radio':
       case 'checkbox': {
-        shape[field.name] = z
-          .union([z.literal('on'), z.boolean()])
-          .refine((val) => val === true || val === 'on', {
-            message: `${field.label}을(를) 체크하세요.`,
-          });
+        if (!field.options || field.options.length === 0) {
+          if (type === 'checkbox') {
+            const base = z.boolean().refine((v) => v === true, {
+              message: `${label}을(를) 체크하세요.`,
+            });
+            shape[name] = required ? base : z.boolean().optional();
+          } else {
+            const base = z.string();
+            shape[name] = required ? base.min(1, `${label}을(를) 선택하세요.`) : base.optional();
+          }
+          break;
+        }
+
+        if (type === 'checkbox') {
+          const base = z.array(z.string());
+          shape[name] = required
+            ? base.min(1, `${label}을(를) 하나 이상 선택하세요.`)
+            : base.optional();
+        } else {
+          const base = z.string();
+          shape[name] = required ? base.min(1, `${label}을(를) 선택하세요.`) : base.optional();
+        }
         break;
       }
 
       case 'date': {
         const base = z.string();
-        shape[field.name] = field.required
-          ? base.min(1, `${field.label}을(를) 입력하세요.`)
-          : base.optional();
+        shape[name] = required ? base.min(1, `${label}을(를) 입력하세요.`) : base.optional();
         break;
       }
 
       default:
         const _exhaustive: never = field;
-        return null;
+        throw new Error(`Unhandled field type: ${JSON.stringify(field)}`);
     }
   });
 

@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import type { FormSchema, TextField, CheckboxField } from '../types/schema';
+import type { FormSchema, TextField, NumberField, CheckboxField } from '../types/schema';
 
 export function generateZodSchema(schema: FormSchema, custom?: z.ZodObject<z.ZodRawShape>) {
   const shape: Record<string, z.ZodTypeAny> = {};
@@ -40,12 +40,36 @@ export function generateZodSchema(schema: FormSchema, custom?: z.ZodObject<z.Zod
         else base = base.optional();
         break;
 
-      case 'number':
-        base = z
-          .string()
-          .refine((v) => v !== '' || !required, `${label}은(는) 필수입니다.`)
-          .refine((v) => v === '' || !isNaN(Number(v)), `${label}은(는) 숫자여야 합니다.`);
+      case 'number': {
+        const f = field as NumberField;
+
+        base = z.preprocess(
+          (val) => {
+            if (typeof val === 'string' && val.trim() === '') return undefined;
+            const num = Number(val);
+            return isNaN(num) ? val : num;
+          },
+          z.number({ required_error: `${label}은(는) 필수입니다.` }),
+        );
+
+        if (!required) {
+          base = base.optional();
+        }
+
+        if (f.min != null) {
+          base = base.refine((val) => val === undefined || val >= f.min!, {
+            message: `${label}은(는) ${f.min} 이상이어야 합니다.`,
+          });
+        }
+
+        if (f.max != null) {
+          base = base.refine((val) => val === undefined || val <= f.max!, {
+            message: `${label}은(는) ${f.max} 이하이어야 합니다.`,
+          });
+        }
+
         break;
+      }
 
       case 'select':
       case 'radio':

@@ -15,7 +15,7 @@ export const BasicForm: Story = {
       { type: 'text', name: 'username', label: '이름', required: true },
       { type: 'email', name: 'email', label: '이메일' },
       { type: 'password', name: 'password', label: '비밀번호', required: true },
-      { type: 'number', name: 'age', label: '나이', required: true },
+      { type: 'number', name: 'age', label: '나이', required: true, min: 10, max: 120 },
       {
         type: 'date',
         name: 'birthdate',

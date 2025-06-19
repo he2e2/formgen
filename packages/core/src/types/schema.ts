@@ -24,10 +24,16 @@ export interface BaseField {
 }
 
 export interface TextField extends BaseField {
-  type: 'text' | 'email' | 'number' | 'password' | 'textarea';
+  type: 'text' | 'email' | 'password' | 'textarea';
   minLength?: number;
   maxLength?: number;
   pattern?: string | RegExp;
+}
+
+export interface NumberField extends BaseField {
+  type: 'number';
+  min?: number;
+  max?: number;
 }
 
 export interface CheckboxField extends BaseField {
@@ -48,6 +54,6 @@ export interface DateField extends BaseField {
   max?: string;
 }
 
-export type FormField = TextField | CheckboxField | ChoiceField | DateField;
+export type FormField = TextField | NumberField | CheckboxField | ChoiceField | DateField;
 
 export type FormSchema = FormField[];

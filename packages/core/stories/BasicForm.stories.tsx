@@ -1,4 +1,4 @@
-import { FormGenerator } from './FormGenerator';
+import { FormGenerator } from '../src/components/FormGenerator';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FormGenerator> = {
@@ -49,6 +49,7 @@ export const BasicForm: Story = {
           { label: '개인정보 처리방침', value: 'privacy' },
         ],
         required: true,
+        minSelected: 2,
       },
       {
         type: 'radio',

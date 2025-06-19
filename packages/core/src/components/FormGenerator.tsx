@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { ZodObject, ZodRawShape } from 'zod';
 import type { FormField } from '../types/schema';
 import { generateZodSchema } from '../lib/zodGenerator';
 import { FormFieldRenderer } from './FormFieldRenderer';
@@ -8,6 +8,7 @@ import { FormFieldRenderer } from './FormFieldRenderer';
 interface Props {
   schema: FormField[];
   onSubmit: (data: Record<string, any>) => void;
+  customSchema?: ZodObject<ZodRawShape>;
   fieldWrapperClassName?: string;
   fieldsetClassName?: string;
   legendClassName?: string;
@@ -19,6 +20,7 @@ interface Props {
 export const FormGenerator: React.FC<Props> = ({
   schema,
   onSubmit,
+  customSchema,
   fieldWrapperClassName,
   fieldsetClassName,
   legendClassName,
@@ -26,7 +28,7 @@ export const FormGenerator: React.FC<Props> = ({
   inputClassName,
   errorClassName,
 }) => {
-  const zodSchema = generateZodSchema(schema);
+  const zodSchema = generateZodSchema(schema, customSchema);
 
   const defaultValues = Object.fromEntries(
     schema.map((f) => {

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type FieldType =
   | 'text'
   | 'email'
@@ -18,18 +20,21 @@ export interface BaseField {
   description?: string;
   disabled?: boolean;
   defaultValue?: any;
+  validateWith?: (z: typeof import('zod'), base: z.ZodTypeAny) => z.ZodTypeAny;
 }
 
 export interface TextField extends BaseField {
   type: 'text' | 'email' | 'number' | 'password' | 'textarea';
   minLength?: number;
   maxLength?: number;
-  pattern?: string;
+  pattern?: string | RegExp;
 }
 
 export interface CheckboxField extends BaseField {
   type: 'checkbox';
   options?: { label: string; value: string }[];
+  minSelected?: number;
+  maxSelected?: number;
 }
 
 export interface ChoiceField extends BaseField {

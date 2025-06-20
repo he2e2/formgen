@@ -1,12 +1,18 @@
 {
   "name": "@formgen/core",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,11 +21,11 @@
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "zod": "^3.25.67",
-    "@hookform/resolvers": "^5.1.1",
-    "react-hook-form": "^7.58.1"
+    "react-hook-form": "^7.58.1",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.0",
@@ -48,6 +54,7 @@
     "storybook": "^9.0.8",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.3",
     "zod": "^3.25.67"
   }

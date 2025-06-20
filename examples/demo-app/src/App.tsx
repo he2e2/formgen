@@ -1,35 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormGenerator, type FormSchema } from "@formgen/core";
+import { z } from "zod";
 
-function App() {
-  const [count, setCount] = useState(0)
+const schema: FormSchema = [
+  { type: "text", name: "username", label: "이름", required: true },
+  { type: "checkbox", name: "agree", label: "약관 동의", required: true },
+];
 
+const customSchema = z.object({
+  username: z.string().min(3, "사용자 이름은 최소 3자 이상"),
+});
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>FormGen 데모</h1>
+      <FormGenerator
+        schema={schema}
+        customSchema={customSchema}
+        onSubmit={(data) => {
+          console.log("폼 제출 결과:", data);
+        }}
+      />
+    </div>
+  );
 }
-
-export default App

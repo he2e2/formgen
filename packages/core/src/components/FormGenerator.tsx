@@ -1,18 +1,36 @@
-import { useForm, Control } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ZodObject, ZodRawShape } from 'zod';
 import type { FormField } from '../types/schema';
-import { generateZodSchema } from '../lib/zodGenerator';
+import { generateZodSchema, generateDefaultValues } from '../lib/zodGenerator';
 import { FormFieldRenderer } from './FormFieldRenderer';
 
 interface Props {
   schema: FormField[];
   onSubmit: (data: Record<string, any>) => void;
+  customSchema?: ZodObject<ZodRawShape>;
+  fieldWrapperClassName?: string;
+  fieldsetClassName?: string;
+  legendClassName?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+  errorClassName?: string;
 }
 
-export const FormGenerator: React.FC<Props> = ({ schema, onSubmit }) => {
-  const zodSchema = generateZodSchema(schema);
+export const FormGenerator: React.FC<Props> = ({
+  schema,
+  onSubmit,
+  customSchema,
+  fieldWrapperClassName,
+  fieldsetClassName,
+  legendClassName,
+  labelClassName,
+  inputClassName,
+  errorClassName,
+}) => {
+  const zodSchema = generateZodSchema(schema, customSchema);
 
-  const defaultValues = Object.fromEntries(schema.map((f) => [f.name, f.defaultValue ?? '']));
+  const defaultValues = generateDefaultValues(schema);
 
   const {
     control,
@@ -31,6 +49,12 @@ export const FormGenerator: React.FC<Props> = ({ schema, onSubmit }) => {
           field={field}
           error={errors[field.name]?.message as string}
           control={control}
+          fieldWrapperClassName={fieldWrapperClassName}
+          fieldsetClassName={fieldsetClassName}
+          legendClassName={legendClassName}
+          labelClassName={labelClassName}
+          inputClassName={inputClassName}
+          errorClassName={errorClassName}
         />
       ))}
       <button type="submit">제출</button>

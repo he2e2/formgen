@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/variable/woff2/PretendardVariable.woff2')
+    format('woff2-variations');
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SUIT';
+  src: url('https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.woff2')
+    format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-custom-gray: #f8fafc;
+  --color-text-black: #212121;
+  --font-family-pretendard:
+    Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-family-suit:
+    SBAggro, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .grid-auto-fit-sm {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .grid-auto-fit-lg {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}

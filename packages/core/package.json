@@ -3,15 +3,17 @@
   "version": "0.0.1",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./package.json": "./package.json",
+    "./core.css": "./dist/core.css"
   },
   "scripts": {
     "dev": "vite",

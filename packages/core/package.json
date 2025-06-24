@@ -1,6 +1,9 @@
 {
   "name": "@formgen/core",
   "version": "0.0.1",
+  "description": "간편한 폼 생성 라이브러리",
+  "author": "he2e2 <dddd6368@gmail.com>",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -73,10 +76,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/he2e2/formgen.git"
+    "url": "https://github.com/he2e2/formgen.git",
+    "directory": "packages/core"
   },
   "bugs": {
     "url": "https://github.com/he2e2/formgen/issues"
   },
-  "homepage": "https://github.com/he2e2/formgen#readme"
+  "homepage": "https://github.com/he2e2/formgen#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }

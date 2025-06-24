@@ -8,7 +8,7 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@formgen/core": ["../../packages/core/src"]
+      "@formgen-he2e2/core": ["../../packages/core/src"]
     }
   }
 }

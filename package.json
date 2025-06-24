@@ -7,7 +7,7 @@
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "storybook": "pnpm --filter @formgen/core storybook"
+    "storybook": "pnpm --filter @formgen-he2e2/core storybook"
   },
   "keywords": [],
   "author": "",

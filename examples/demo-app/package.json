@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@formgen/core": "workspace:*",
+    "@formgen-he2e2/core": "workspace:*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^3.25.67"

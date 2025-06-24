@@ -1,5 +1,5 @@
-import { FormGenerator, type FormSchema } from '@formgen/core';
-import '@formgen/core/styles.css';
+import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';
+import '@formgen-he2e2/core/styles.css';
 import './index.css';
 import { z } from 'zod';
 import { Button, IconCard } from './components';
@@ -73,10 +73,10 @@ const CodePreview = () => {
   return (
     <div className="mockup-code w-full">
       <pre data-prefix="1">
-        <code>{`import { FormGenerator, type FormSchema } from '@formgen/core';`}</code>
+        <code>{`import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';`}</code>
       </pre>
       <pre data-prefix="2">
-        <code>{`import '@formgen/core/styles.css';`}</code>
+        <code>{`import '@formgen-he2e2/core/styles.css';`}</code>
       </pre>
       <pre data-prefix="3">
         <code>{`import { z } from 'zod';`}</code>

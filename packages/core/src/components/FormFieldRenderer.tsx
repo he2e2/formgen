@@ -1,8 +1,6 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-
-import '../styles/generator.css';
 import type { FormField } from '../types/schema';
 
 const combineClasses = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(' ');

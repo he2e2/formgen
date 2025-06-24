@@ -8,7 +8,6 @@ export default defineConfig({
     dts(),
     visualizer({
       filename: 'bundle-stats.html',
-      open: true,
       gzipSize: true,
       brotliSize: true,
     }),
@@ -20,7 +19,25 @@ export default defineConfig({
       fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.cjs'),
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-hook-form', '@hookform/resolvers', 'zod'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react-hook-form',
+        '@hookform/resolvers/zod',
+        'zod',
+      ],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'ReactJSXRuntime',
+          'react-hook-form': 'ReactHookForm',
+          '@hookform/resolvers/zod': 'HookFormResolversZod',
+          zod: 'Zod',
+        },
+      },
     },
     minify: 'terser',
     terserOptions: {
@@ -32,5 +49,10 @@ export default defineConfig({
         comments: false,
       },
     },
+    cssCodeSplit: false,
+  },
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react',
   },
 });

@@ -12,8 +12,7 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./package.json": "./package.json",
-    "./core.css": "./dist/core.css"
+    "./styles.css": "./dist/core.css"
   },
   "scripts": {
     "dev": "vite",

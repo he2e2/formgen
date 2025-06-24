@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ZodObject, ZodRawShape } from 'zod';
+
 import type { FormField } from '../types/schema';
 import { generateZodSchema, generateDefaultValues } from '../lib/zodGenerator';
 import { FormFieldRenderer } from './FormFieldRenderer';
@@ -60,7 +61,7 @@ export const FormGenerator: React.FC<Props> = ({
           errorClassName={errorClassName}
         />
       ))}
-      <button type="submit" className={`formgen-button ${buttonClassName}`}>
+      <button type="submit" className={`formgen-button ${buttonClassName || ''}`}>
         제출
       </button>
     </form>

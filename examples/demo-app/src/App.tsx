@@ -1,5 +1,5 @@
 import { FormGenerator, type FormSchema } from '@formgen/core';
-import '@formgen/core/core.css';
+import '@formgen/core/styles.css';
 import './index.css';
 import { z } from 'zod';
 import { Button, IconCard } from './components';

@@ -50,6 +50,7 @@ export default defineConfig({
       },
     },
     cssCodeSplit: false,
+    sourcemap: true,
   },
   esbuild: {
     jsx: 'automatic',

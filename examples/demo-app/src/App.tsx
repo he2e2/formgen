@@ -34,33 +34,35 @@ const Header = () => {
 };
 
 const Introduction = () => {
-  const fastDevelopmentContent = <div>hihi</div>;
-  const validationContent = <div>hihi</div>;
-  const customizationContent = <div>hihi</div>;
-
   return (
     <section className="text-center py-24 px-16 w-full bg-white text-text-black rounded-t-3xl flex flex-col items-center gap-12">
       <h2 className="text-2xl font-medium">
-        카드를 클릭해 설명을 볼 수 있습니다.
+        카드를 클릭하면 Github 페이지로 이동합니다.
       </h2>
       <div className="grid grid-auto-fit gap-6 w-full">
         <IconCard
           icon="/Thunder.png"
           title="빠른 개발"
           description="스키마 정의만으로 완성되는 즉시 사용 가능한 폼 생성"
-          detailedContent={fastDevelopmentContent}
+          onClick={() => {
+            window.open('https://github.com/he2e2/formgen', '_blank');
+          }}
         />
         <IconCard
           icon="/Shield.png"
           title="유효성 검사"
           description="Zod 기반 타입 안전성과 실시간 검증으로 견고한 데이터 처리"
-          detailedContent={validationContent}
+          onClick={() => {
+            window.open('https://github.com/he2e2/formgen', '_blank');
+          }}
         />
         <IconCard
           icon="/Palette.png"
           title="커스터마이징"
           description="요소별 독립적인 클래스 적용으로 자유로운 디자인 구현"
-          detailedContent={customizationContent}
+          onClick={() => {
+            window.open('https://github.com/he2e2/formgen', '_blank');
+          }}
         />
       </div>
     </section>
@@ -69,7 +71,7 @@ const Introduction = () => {
 
 const CodePreview = () => {
   return (
-    <div className="mockup-code w-1/2">
+    <div className="mockup-code w-full">
       <pre data-prefix="1">
         <code>{`import { FormGenerator, type FormSchema } from '@formgen/core';`}</code>
       </pre>
@@ -154,8 +156,8 @@ const DemoForm = () => {
         왼쪽 폼에 입력하고 제출 버튼을 눌러보세요. 오른쪽에는 코드 미리보기가
         있습니다.
       </p>
-      <div className="w-full flex gap-3 flex-row">
-        <div className="w-1/2 bg-white p-6 rounded-lg shadow-md">
+      <div className="w-full flex flex-col lg:flex-row gap-6">
+        <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
           <FormGenerator
             schema={schema}
             customSchema={customSchema}
@@ -164,7 +166,9 @@ const DemoForm = () => {
             }}
           />
         </div>
-        <CodePreview />
+        <div className="w-full lg:w-1/2">
+          <CodePreview />
+        </div>
       </div>
     </section>
   );
@@ -173,7 +177,7 @@ const DemoForm = () => {
 const Footer = () => {
   return (
     <footer className="text-center p-4 text-text-black">
-      <p>© 2025 FormGen. All rights reserved.</p>
+      <p>© 2025 FormGen. All Rights Reserved.</p>
     </footer>
   );
 };

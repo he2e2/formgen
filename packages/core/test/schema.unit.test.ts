@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import * as z from 'zod';
+import { z } from 'zod';
 import { generateZodSchema } from '../src/lib/zodGenerator';
 import type { FormSchema } from '../src/types/schema';
 

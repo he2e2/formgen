@@ -41,3 +41,9 @@ coverage/
 .idea/
 *.iml
 Thumbs.db
+
+
+# ----------------------
+# 📊 Bundle stats
+# ----------------------
+bundle-stats.html

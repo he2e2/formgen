@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 import type {
   FormSchema,
   FormField,
@@ -8,26 +8,8 @@ import type {
   ChoiceField,
   DateField,
 } from '../types/schema';
-
-const ERROR = {
-  required: (l: string) => `${l}은(는) 필수 입력 항목입니다.`,
-  minLength: (l: string, n: number) => `${l}은(는) 최소 ${n}자 이상입니다.`,
-  maxLength: (l: string, n: number) => `${l}은(는) 최대 ${n}자 이하입니다.`,
-  pattern: (l: string) => `${l} 형식이 올바르지 않습니다.`,
-  email: (l: string) => `${l} 형식이 올바르지 않습니다.`,
-  min: (l: string, n: number) => `${l}은(는) ${n} 이상이어야 합니다.`,
-  max: (l: string, n: number) => `${l}은(는) ${n} 이하이어야 합니다.`,
-  minSelected: (l: string, n: number) => `${l}을(를) 최소 ${n}개 선택하셔야 합니다.`,
-  maxSelected: (l: string, n: number) => `${l}을(를) 최대 ${n}개 선택하셔야 합니다.`,
-  select: (l: string) => `${l}을(를) 선택하세요.`,
-  check: (l: string) => `${l}을(를) 체크하세요.`,
-  dateInput: (l: string) => `${l}을(를) 입력하세요.`,
-  dateFormat: (l: string) => `${l} 형식이 올바르지 않습니다.`,
-  dateMin: (l: string, min: string) => `${l}은(는) ${min} 이후여야 합니다.`,
-  dateMax: (l: string, max: string) => `${l}은(는) ${max} 이전이어야 합니다.`,
-  integer: (l: string) => `${l}은(는) 정수여야 합니다.`,
-  multipleOf: (l: string, s: number) => `${l}은(는) ${s}의 배수여야 합니다.`,
-} as const;
+import { ERROR } from '../constants/errors';
+import { DATE_REGEX } from '../constants/regex';
 
 const isVoid = (v: unknown) =>
   v === undefined || v === null || (typeof v === 'string' && v.trim() === '');
@@ -131,12 +113,6 @@ const buildCheckbox = (field: CheckboxField): z.ZodTypeAny => {
     });
   }
   return required ? schema : schema.optional();
-};
-
-const DATE_REGEX: Record<NonNullable<DateField['format']>, RegExp> = {
-  date: /^\d{4}-\d{2}-\d{2}$/,
-  'datetime-local': /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/,
-  time: /^\d{2}:\d{2}$/,
 };
 
 const buildDate = (field: DateField): z.ZodTypeAny => {

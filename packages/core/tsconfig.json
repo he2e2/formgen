@@ -2,15 +2,17 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "jsx": "react-jsx",
+    "lib": ["DOM", "ESNext"],
+    "moduleResolution": "Bundler",
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
+    "emitDeclarationOnly": true,
     "outDir": "dist",
-    "moduleResolution": "Node",
-    "esModuleInterop": true,
+    "rootDir": "src",
     "strict": true,
+    "jsx": "react-jsx",
     "skipLibCheck": true
   },
-  "include": ["src", "test", "stories"],
-  "exclude": ["dist"]
+  "include": ["src"]
 }

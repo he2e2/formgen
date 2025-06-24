@@ -1,4 +1,9 @@
 {
-    "extends": "./packages/core/tsconfig.json"
-  }
-  
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@formgen/core": ["packages/core/src"]
+    }
+  },
+  "references": [{ "path": "packages/core" }, { "path": "examples/demo-app" }]
+}

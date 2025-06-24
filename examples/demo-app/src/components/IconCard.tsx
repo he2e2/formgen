@@ -4,13 +4,18 @@ export const IconCard = ({
   icon,
   title,
   description,
+  detailedContent,
 }: {
   icon: string;
   title: string;
   description: string;
+  detailedContent?: React.ReactNode;
 }) => {
   return (
-    <Card className={`flex flex-col items-center text-center bg-gray-50`}>
+    <Card
+      className={`flex flex-col items-center text-center bg-gray-50`}
+      detailedContent={detailedContent}
+    >
       <div className="bg-gradient-to-br from-blue-200 to-purple-200 rounded-2xl w-20 h-20 flex items-center justify-center mb-2">
         <figure>
           <img src={icon} alt={icon} className="rounded-xl" />

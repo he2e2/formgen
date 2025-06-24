@@ -34,24 +34,33 @@ const Header = () => {
 };
 
 const Introduction = () => {
+  const fastDevelopmentContent = <div>hihi</div>;
+  const validationContent = <div>hihi</div>;
+  const customizationContent = <div>hihi</div>;
+
   return (
-    <section className="text-center py-24 px-16 w-full bg-white text-text-black rounded-t-3xl">
-      <h2 className="hidden">소개</h2>
-      <div className="grid grid-auto-fit gap-6">
+    <section className="text-center py-24 px-16 w-full bg-white text-text-black rounded-t-3xl flex flex-col items-center gap-12">
+      <h2 className="text-2xl font-medium">
+        카드를 클릭해 설명을 볼 수 있습니다.
+      </h2>
+      <div className="grid grid-auto-fit gap-6 w-full">
         <IconCard
           icon="/Thunder.png"
           title="빠른 개발"
           description="스키마 정의만으로 완성되는 즉시 사용 가능한 폼 생성"
+          detailedContent={fastDevelopmentContent}
         />
         <IconCard
           icon="/Shield.png"
           title="유효성 검사"
           description="Zod 기반 타입 안전성과 실시간 검증으로 견고한 데이터 처리"
+          detailedContent={validationContent}
         />
         <IconCard
           icon="/Palette.png"
           title="커스터마이징"
           description="요소별 독립적인 클래스 적용으로 자유로운 디자인 구현"
+          detailedContent={customizationContent}
         />
       </div>
     </section>
@@ -65,7 +74,7 @@ const CodePreview = () => {
         <code>{`import { FormGenerator, type FormSchema } from '@formgen/core';`}</code>
       </pre>
       <pre data-prefix="2">
-        <code>{`import '@formgen/core/core.css';`}</code>
+        <code>{`import '@formgen/core/styles.css';`}</code>
       </pre>
       <pre data-prefix="3">
         <code>{`import { z } from 'zod';`}</code>

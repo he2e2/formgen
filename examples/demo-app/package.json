@@ -1,7 +1,7 @@
 {
   "name": "demo-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@formgen-he2e2/core": "workspace:*",
+    "@formgen-he2e2/core": "^1.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^3.25.67"

@@ -17,28 +17,60 @@ interface Props {
   fieldsetClassName?: string;
   legendClassName?: string;
   labelClassName?: string;
+  groupClassName?: string;
   inputClassName?: string;
   errorClassName?: string;
 }
 
-const TextInput = memo(({ field, control, inputCls, commonAria }: any) => (
-  <Controller
-    name={field.name}
-    control={control}
-    defaultValue={field.defaultValue ?? ''}
-    render={({ field: fieldProps }) => (
-      <input
-        id={field.name}
-        type={field.type}
-        placeholder={field.placeholder}
-        disabled={field.disabled}
-        className={inputCls}
-        {...commonAria}
-        {...fieldProps}
-      />
-    )}
-  />
-));
+const TextInput = memo(({ field, control, inputCls, commonAria }: any) => {
+  const getInputType = () => {
+    if (field.type === 'date') {
+      switch (field.format) {
+        case 'datetime-local':
+          return 'datetime-local';
+        case 'time':
+          return 'time';
+        case 'date':
+        default:
+          return 'date';
+      }
+    }
+    return field.type;
+  };
+
+  const getInputProps = () => {
+    const baseProps = {
+      id: field.name,
+      type: getInputType(),
+      placeholder: field.placeholder,
+      disabled: field.disabled,
+      className: inputCls,
+      ...commonAria,
+    };
+
+    if (field.type === 'date') {
+      if (field.min) baseProps.min = field.min;
+      if (field.max) baseProps.max = field.max;
+    }
+
+    if (field.type === 'number') {
+      if (field.min !== undefined) baseProps.min = field.min;
+      if (field.max !== undefined) baseProps.max = field.max;
+      if (field.step !== undefined) baseProps.step = field.step;
+    }
+
+    return baseProps;
+  };
+
+  return (
+    <Controller
+      name={field.name}
+      control={control}
+      defaultValue={field.defaultValue ?? ''}
+      render={({ field: fieldProps }) => <input {...getInputProps()} {...fieldProps} />}
+    />
+  );
+});
 
 const TextareaInput = memo(({ field, control, inputCls, commonAria }: any) => (
   <Controller
@@ -59,7 +91,7 @@ const TextareaInput = memo(({ field, control, inputCls, commonAria }: any) => (
 ));
 
 const CheckboxInput = memo(
-  ({ field, control, inputCls, labelCls, fieldsetCls, legendCls, commonAria }: any) => {
+  ({ field, control, inputCls, labelCls, fieldsetCls, legendCls, GroupCls, commonAria }: any) => {
     const hasOptions = field.options && field.options.length > 0;
 
     if (hasOptions) {
@@ -71,7 +103,7 @@ const CheckboxInput = memo(
             control={control}
             defaultValue={field.defaultValue ?? []}
             render={({ field: { value, onChange } }) => (
-              <>
+              <div className={GroupCls}>
                 {field.options.map((opt: any) => (
                   <label key={opt.value} className={labelCls}>
                     <input
@@ -91,7 +123,7 @@ const CheckboxInput = memo(
                     <span>{opt.label}</span>
                   </label>
                 ))}
-              </>
+              </div>
             )}
           />
         </fieldset>
@@ -124,7 +156,7 @@ const CheckboxInput = memo(
 );
 
 const RadioInput = memo(
-  ({ field, control, inputCls, labelCls, fieldsetCls, legendCls, commonAria }: any) => (
+  ({ field, control, inputCls, labelCls, fieldsetCls, legendCls, GroupCls, commonAria }: any) => (
     <fieldset className={fieldsetCls}>
       <legend className={legendCls}>{field.label}</legend>
       <Controller
@@ -132,7 +164,7 @@ const RadioInput = memo(
         control={control}
         defaultValue={field.defaultValue ?? ''}
         render={({ field: fieldProps }) => (
-          <>
+          <div className={GroupCls}>
             {field.options?.map((opt: any) => (
               <label key={opt.value} className={labelCls}>
                 <input
@@ -148,7 +180,7 @@ const RadioInput = memo(
                 <span>{opt.label}</span>
               </label>
             ))}
-          </>
+          </div>
         )}
       />
     </fieldset>
@@ -203,6 +235,7 @@ export const FormFieldRenderer: React.FC<Props> = memo(
     fieldsetClassName,
     legendClassName,
     labelClassName,
+    groupClassName,
     inputClassName,
     errorClassName,
   }) => {
@@ -216,12 +249,14 @@ export const FormFieldRenderer: React.FC<Props> = memo(
         label: combineClasses('formgen-label', labelClassName),
         input: combineClasses('formgen-input', inputClassName),
         error: combineClasses('formgen-error', errorClassName),
+        group: combineClasses('formgen-group', groupClassName),
       }),
       [
         fieldWrapperClassName,
         fieldsetClassName,
         legendClassName,
         labelClassName,
+        groupClassName,
         inputClassName,
         errorClassName,
       ],
@@ -242,6 +277,7 @@ export const FormFieldRenderer: React.FC<Props> = memo(
           labelCls={classNames.label}
           fieldsetCls={classNames.fieldset}
           legendCls={classNames.legend}
+          GroupCls={classNames.group}
           commonAria={commonAria}
         />
       );

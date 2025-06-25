@@ -2,7 +2,7 @@ import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';
 import '@formgen-he2e2/core/styles.css';
 import './index.css';
 import { z } from 'zod';
-import { Button, IconCard } from './components';
+import { Button, IconCard, AdvancedProfileForm } from './components';
 
 const schema: FormSchema = [
   { type: 'text', name: 'username', label: '이름', required: true },
@@ -188,6 +188,7 @@ export default function App() {
       <Header />
       <Introduction />
       <DemoForm />
+      <AdvancedProfileForm />
       <Footer />
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "name": "@formgen-he2e2/core",
-  "version": "1.0.0",
+  "version": "1.1.4",
   "description": "간편한 폼 생성 라이브러리",
   "author": "he2e2 <dddd6368@gmail.com>",
   "license": "MIT",

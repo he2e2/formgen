@@ -1,8 +1,5 @@
 <div align=center>
-<img width="962" alt="Image" src="https://github.com/user-attachments/assets/4f4b9dc8-4657-49e3-a085-679a76b2e484" />
-</div>
-
-<div align=center>
+<h1>FORMGEN</h1>
 
 > 스키마 기반 React 폼 제너레이터 - 간단한 JSON 설정으로 완성되는 폼
 
@@ -86,10 +83,10 @@ function MyForm() {
 ```typescript
 const schema: FormSchema = [
   {
-    type: "text",
-    name: "username",
-    label: "사용자명",
-    wrapperClassName: "custom-wrapper",
+    type: 'text',
+    name: 'username',
+    label: '사용자명',
+    wrapperClassName: 'custom-wrapper',
   },
 ];
 ```
@@ -100,10 +97,10 @@ const schema: FormSchema = [
 const validationSchema = z.object({
   password: z
     .string()
-    .min(8, "비밀번호는 최소 8자 이상이어야 합니다")
+    .min(8, '비밀번호는 최소 8자 이상이어야 합니다')
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "대문자, 소문자, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다"
+      '대문자, 소문자, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다',
     ),
 });
 ```
@@ -112,40 +109,31 @@ const validationSchema = z.object({
 
 ### 회원가입 폼
 
-> 복잡한 예제는 [데모사이트](https://formgen-xi.vercel.app/)에서 확인하세요.
-
 ```typescript
 const signupSchema: FormSchema = [
-  { type: "text", name: "name", label: "이름", required: true },
-  { type: "email", name: "email", label: "이메일", required: true },
-  { type: "password", name: "password", label: "비밀번호", required: true },
+  { type: 'text', name: 'name', label: '이름', required: true },
+  { type: 'email', name: 'email', label: '이메일', required: true },
+  { type: 'password', name: 'password', label: '비밀번호', required: true },
   {
-    type: "password",
-    name: "confirmPassword",
-    label: "비밀번호 확인",
+    type: 'password',
+    name: 'confirmPassword',
+    label: '비밀번호 확인',
     required: true,
   },
   {
-    type: "select",
-    name: "age",
-    label: "연령대",
-    options: ["10대", "20대", "30대", "40대 이상"],
+    type: 'select',
+    name: 'age',
+    label: '연령대',
+    options: ['10대', '20대', '30대', '40대 이상'],
   },
   {
-    type: "checkbox",
-    name: "terms",
-    label: "이용약관에 동의합니다",
+    type: 'checkbox',
+    name: 'terms',
+    label: '이용약관에 동의합니다',
     required: true,
   },
 ];
 ```
-
-<table align="center">
-  <tr>
-    <td><img width="500" alt="Image" src="https://github.com/user-attachments/assets/7722f726-e645-4a35-ad31-d1f67829b066" /></td>
-    <td><img width="500" alt="Image" src="https://github.com/user-attachments/assets/f18091da-cbc4-43ae-83e0-fb3f5609afc8" /></td>
-  </tr>
-</table>
 
 ## 🛠️ 기술 스택
 

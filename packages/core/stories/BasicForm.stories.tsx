@@ -62,5 +62,6 @@ export const BasicForm: Story = {
       },
     ],
     onSubmit: (data) => alert(JSON.stringify(data, null, 2)),
+    language: 'ko',
   },
 };

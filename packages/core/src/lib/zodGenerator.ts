@@ -8,7 +8,7 @@ import type {
   ChoiceField,
   DateField,
 } from '../types/schema';
-import { ERROR } from '../constants/errors';
+import { i18n } from '../constants/errors';
 import { DATE_REGEX } from '../constants/regex';
 
 const isVoid = (v: unknown) =>
@@ -17,17 +17,23 @@ const isVoid = (v: unknown) =>
 const preprocessNumber = (value: unknown) => (isVoid(value) ? undefined : Number(value));
 
 const withRequired = <T extends z.ZodTypeAny>(schema: T, label: string) =>
-  schema.refine((v) => !isVoid(v), { message: ERROR.required(label) });
+  schema.refine((v) => !isVoid(v), {
+    message: i18n.getErrorMessage('required', label),
+  });
 
 const buildText = (field: TextField) => {
   const { label, required, type, minLength, maxLength, pattern } = field;
-  let s = type === 'email' ? z.string().email(ERROR.email(label)) : z.string();
+  let s = type === 'email' ? z.string().email(i18n.getErrorMessage('email', label)) : z.string();
 
-  if (minLength !== undefined) s = s.min(minLength, ERROR.minLength(label, minLength));
-  if (maxLength !== undefined) s = s.max(maxLength, ERROR.maxLength(label, maxLength));
+  if (minLength !== undefined) {
+    s = s.min(minLength, i18n.getErrorMessage('minLength', label, minLength));
+  }
+  if (maxLength !== undefined) {
+    s = s.max(maxLength, i18n.getErrorMessage('maxLength', label, maxLength));
+  }
   if (pattern) {
     const regex = typeof pattern === 'string' ? new RegExp(pattern) : pattern;
-    s = s.regex(regex, ERROR.pattern(label));
+    s = s.regex(regex, i18n.getErrorMessage('pattern', label));
   }
 
   return required ? withRequired(s, label) : s.optional();
@@ -39,22 +45,30 @@ const buildNumber = (field: NumberField) => {
   let s: z.ZodTypeAny = z.preprocess(preprocessNumber, z.number().or(z.undefined()));
 
   if (required) s = withRequired(s, label);
-  if (integer)
+
+  if (integer) {
     s = s.refine((v) => v === undefined || Number.isInteger(v), {
-      message: ERROR.integer(label),
+      message: i18n.getErrorMessage('integer', label),
     });
-  if (min !== undefined)
+  }
+
+  if (min !== undefined) {
     s = s.refine((v) => v === undefined || v >= min, {
-      message: ERROR.min(label, min),
+      message: i18n.getErrorMessage('min', label, min),
     });
-  if (max !== undefined)
+  }
+
+  if (max !== undefined) {
     s = s.refine((v) => v === undefined || v <= max, {
-      message: ERROR.max(label, max),
+      message: i18n.getErrorMessage('max', label, max),
     });
-  if (step !== undefined && step > 0)
+  }
+
+  if (step !== undefined && step > 0) {
     s = s.refine((v) => v === undefined || (v as number) % step === 0, {
-      message: ERROR.multipleOf(label, step),
+      message: i18n.getErrorMessage('multipleOf', label, step),
     });
+  }
 
   return s;
 };
@@ -68,9 +82,23 @@ const buildChoice = (field: ChoiceField): z.ZodTypeAny => {
 
   if (required) {
     schema = multiple
-      ? (schema as z.ZodArray<z.ZodString>).min(1, ERROR.select(label))
-      : (schema as z.ZodString).min(1, ERROR.select(label));
+      ? (schema as z.ZodArray<z.ZodString>).min(1, i18n.getErrorMessage('select', label))
+      : (schema as z.ZodString).min(1, i18n.getErrorMessage('select', label));
   }
+
+  const getInvalidValueMessage = (label: string, multiple: boolean) => {
+    const currentLang = i18n.getCurrentLanguage();
+    switch (currentLang) {
+      case 'ko':
+        return `${label}에 유효하지 않은 값${multiple ? '이 포함되어 있습니다.' : '입니다.'}`;
+      case 'en':
+        return `${label} contains invalid value${multiple ? 's' : ''}.`;
+      case 'ja':
+        return `${label}に無効な値${multiple ? 'が含まれています' : 'です'}。`;
+      default:
+        return `Invalid value${multiple ? 's' : ''} in ${label}.`;
+    }
+  };
 
   schema = schema.refine(
     (v) => {
@@ -79,7 +107,7 @@ const buildChoice = (field: ChoiceField): z.ZodTypeAny => {
         ? (v as string[]).every((val) => values.includes(val))
         : values.includes(v as string);
     },
-    { message: `${label}에 유효하지 않은 값${multiple ? '이 포함되어 있습니다.' : '입니다.'}` },
+    { message: getInvalidValueMessage(label, multiple) },
   );
 
   return required ? schema : schema.optional();
@@ -93,14 +121,32 @@ const buildCheckbox = (field: CheckboxField): z.ZodTypeAny => {
 
     let schema = z.array(z.string());
 
-    if (required) schema = schema.min(1, ERROR.select(label));
-    if (minSelected !== undefined)
-      schema = schema.min(minSelected, ERROR.minSelected(label, minSelected));
-    if (maxSelected !== undefined)
-      schema = schema.max(maxSelected, ERROR.maxSelected(label, maxSelected));
+    if (required) {
+      schema = schema.min(1, i18n.getErrorMessage('select', label));
+    }
+    if (minSelected !== undefined) {
+      schema = schema.min(minSelected, i18n.getErrorMessage('minSelected', label, minSelected));
+    }
+    if (maxSelected !== undefined) {
+      schema = schema.max(maxSelected, i18n.getErrorMessage('maxSelected', label, maxSelected));
+    }
+
+    const getInvalidCheckboxMessage = (label: string) => {
+      const currentLang = i18n.getCurrentLanguage();
+      switch (currentLang) {
+        case 'ko':
+          return `${label}에 유효하지 않은 값이 포함되어 있습니다.`;
+        case 'en':
+          return `${label} contains invalid values.`;
+        case 'ja':
+          return `${label}に無効な値が含まれています。`;
+        default:
+          return `Invalid values in ${label}.`;
+      }
+    };
 
     const validated = schema.refine((vals) => vals.every((v) => values.includes(v)), {
-      message: `${label}에 유효하지 않은 값이 포함되어 있습니다.`,
+      message: getInvalidCheckboxMessage(label),
     });
 
     return required ? validated : validated.optional();
@@ -109,7 +155,7 @@ const buildCheckbox = (field: CheckboxField): z.ZodTypeAny => {
   let schema: z.ZodTypeAny = z.boolean();
   if (required) {
     schema = schema.refine((v) => v === true, {
-      message: ERROR.check(label),
+      message: i18n.getErrorMessage('check', label),
     });
   }
   return required ? schema : schema.optional();
@@ -118,18 +164,20 @@ const buildCheckbox = (field: CheckboxField): z.ZodTypeAny => {
 const buildDate = (field: DateField): z.ZodTypeAny => {
   const { label, required, min, max, format = 'date' } = field;
 
-  const base = z.string().regex(DATE_REGEX[format], ERROR.dateFormat(label));
+  const base = z.string().regex(DATE_REGEX[format], i18n.getErrorMessage('dateFormat', label));
 
-  const prepared = required ? base.min(1, ERROR.dateInput(label)) : base.optional();
+  const prepared = required
+    ? base.min(1, i18n.getErrorMessage('dateInput', label))
+    : base.optional();
 
   const final =
     format === 'date'
       ? prepared
           .refine((v) => v !== undefined && (!min || v >= min), {
-            message: ERROR.dateMin(label, min ?? ''),
+            message: i18n.getErrorMessage('dateMin', label, min ?? ''),
           })
           .refine((v) => v !== undefined && (!max || v <= max), {
-            message: ERROR.dateMax(label, max ?? ''),
+            message: i18n.getErrorMessage('dateMax', label, max ?? ''),
           })
       : prepared;
 
@@ -159,7 +207,20 @@ const buildForm = (field: FormField): z.ZodTypeAny => {
 
     default: {
       const _never: never = field;
-      throw new Error(`지원하지 않는 필드 타입: ${JSON.stringify(_never)}`);
+      const getUnsupportedFieldMessage = () => {
+        const currentLang = i18n.getCurrentLanguage();
+        switch (currentLang) {
+          case 'ko':
+            return `지원하지 않는 필드 타입: ${JSON.stringify(_never)}`;
+          case 'en':
+            return `Unsupported field type: ${JSON.stringify(_never)}`;
+          case 'ja':
+            return `サポートされていないフィールドタイプ: ${JSON.stringify(_never)}`;
+          default:
+            return `Unsupported field type: ${JSON.stringify(_never)}`;
+        }
+      };
+      throw new Error(getUnsupportedFieldMessage());
     }
   }
 };

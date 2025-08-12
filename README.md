@@ -86,7 +86,7 @@ Supported Languages:
 
 ## 📚 Supported Field Types
 
-| 타입     | 설명               | 예시                |
+| Type     | Description        | Example             |
 | -------- | ------------------ | ------------------- |
 | text     | Basic text input   | Name, title, etc.   |
 | email    | Email input        | user@example.com    |

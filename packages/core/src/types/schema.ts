@@ -39,7 +39,7 @@ export interface BaseField {
   description?: string;
   disabled?: boolean;
   defaultValue?: any;
-  validateWith?: <T extends z.ZodTypeAny>(z: typeof import('zod'), base: T) => z.ZodTypeAny;
+  validateWith?: (base: z.ZodTypeAny) => z.ZodTypeAny;
   group?: string;
   compareWith?: FieldComparison;
   showWhen?: FieldCondition;
@@ -109,3 +109,11 @@ export interface FormSchema {
 
 export type GroupedFormSchema = FormSchema;
 export type LegacyFormSchema = FormField[];
+
+export const isLegacySchema = (schema: any): schema is LegacyFormSchema => {
+  return Array.isArray(schema);
+};
+
+export const isGroupedSchema = (schema: any): schema is GroupedFormSchema => {
+  return typeof schema === 'object' && 'fields' in schema;
+};

@@ -1,13 +1,19 @@
 import { z } from 'zod';
 import type {
   FormSchema,
+  GroupedFormSchema,
+  LegacyFormSchema,
   FormField,
   TextField,
   NumberField,
   CheckboxField,
   ChoiceField,
   DateField,
+  FieldGroup,
+  FieldComparison,
+  FieldCondition,
 } from '../types/schema';
+import { isLegacySchema } from '../types/schema';
 import { i18n } from '../constants/errors';
 import { DATE_REGEX } from '../constants/regex';
 
@@ -20,6 +26,123 @@ const withRequired = <T extends z.ZodTypeAny>(schema: T, label: string) =>
   schema.refine((v) => !isVoid(v), {
     message: i18n.getErrorMessage('required', label),
   });
+
+const shouldShowField = (condition: FieldCondition, formValues: Record<string, any>): boolean => {
+  const targetValue = formValues[condition.when];
+  const expectedValue = condition.is;
+  const operator = condition.operator || 'equals';
+
+  switch (operator) {
+    case 'equals':
+      return targetValue === expectedValue;
+    case 'not-equals':
+      return targetValue !== expectedValue;
+    case 'contains':
+      return Array.isArray(targetValue)
+        ? targetValue.includes(expectedValue)
+        : String(targetValue).includes(String(expectedValue));
+    case 'greater-than':
+      return Number(targetValue) > Number(expectedValue);
+    case 'less-than':
+      return Number(targetValue) < Number(expectedValue);
+    default:
+      return true;
+  }
+};
+
+const createComparisonValidator = (field: FormField, comparison: FieldComparison) => {
+  return (data: Record<string, any>) => {
+    const value = data[field.name];
+    const targetValue = data[comparison.targetField];
+
+    if (isVoid(value) || isVoid(targetValue)) return true;
+
+    switch (comparison.type) {
+      case 'equals':
+        return value === targetValue;
+      case 'not-equals':
+        return value !== targetValue;
+      case 'greater-than':
+        return Number(value) > Number(targetValue);
+      case 'less-than':
+        return Number(value) < Number(targetValue);
+      case 'custom':
+        return comparison.customValidator ? comparison.customValidator(value, targetValue) : true;
+      default:
+        return true;
+    }
+  };
+};
+
+const getComparisonErrorMessage = (
+  comparison: FieldComparison,
+  fieldLabel: string,
+  targetFieldLabel: string,
+): string => {
+  if (comparison.message) {
+    return comparison.message;
+  }
+
+  const currentLang = i18n.getCurrentLanguage();
+
+  switch (comparison.type) {
+    case 'equals':
+      switch (currentLang) {
+        case 'ko':
+          return `${fieldLabel}이(가) ${targetFieldLabel}와(과) 일치하지 않습니다`;
+        case 'en':
+          return `${fieldLabel} does not match ${targetFieldLabel}`;
+        case 'ja':
+          return `${fieldLabel}が${targetFieldLabel}と一致しません`;
+        default:
+          return `${fieldLabel} does not match ${targetFieldLabel}`;
+      }
+    case 'not-equals':
+      switch (currentLang) {
+        case 'ko':
+          return `${fieldLabel}이(가) ${targetFieldLabel}와(과) 달라야 합니다`;
+        case 'en':
+          return `${fieldLabel} must be different from ${targetFieldLabel}`;
+        case 'ja':
+          return `${fieldLabel}は${targetFieldLabel}と異なる必要があります`;
+        default:
+          return `${fieldLabel} must be different from ${targetFieldLabel}`;
+      }
+    case 'greater-than':
+      switch (currentLang) {
+        case 'ko':
+          return `${fieldLabel}이(가) ${targetFieldLabel}보다 커야 합니다`;
+        case 'en':
+          return `${fieldLabel} must be greater than ${targetFieldLabel}`;
+        case 'ja':
+          return `${fieldLabel}は${targetFieldLabel}より大きい必要があります`;
+        default:
+          return `${fieldLabel} must be greater than ${targetFieldLabel}`;
+      }
+    case 'less-than':
+      switch (currentLang) {
+        case 'ko':
+          return `${fieldLabel}이(가) ${targetFieldLabel}보다 작아야 합니다`;
+        case 'en':
+          return `${fieldLabel} must be less than ${targetFieldLabel}`;
+        case 'ja':
+          return `${fieldLabel}は${targetFieldLabel}より小さい必要があります`;
+        default:
+          return `${fieldLabel} must be less than ${targetFieldLabel}`;
+      }
+    default:
+      switch (currentLang) {
+        case 'ko':
+          return `${fieldLabel} 검증에 실패했습니다`;
+        case 'en':
+          return `${fieldLabel} validation failed`;
+        case 'ja':
+          return `${fieldLabel}の検証に失敗しました`;
+        default:
+          return `${fieldLabel} validation failed`;
+      }
+  }
+};
 
 const buildText = (field: TextField) => {
   const { label, required, type, minLength, maxLength, pattern } = field;
@@ -185,25 +308,32 @@ const buildDate = (field: DateField): z.ZodTypeAny => {
 };
 
 const buildForm = (field: FormField): z.ZodTypeAny => {
+  let baseSchema: z.ZodTypeAny;
+
   switch (field.type) {
     case 'text':
     case 'email':
     case 'password':
     case 'textarea':
-      return buildText(field as TextField);
+      baseSchema = buildText(field as TextField);
+      break;
 
     case 'number':
-      return buildNumber(field as NumberField);
+      baseSchema = buildNumber(field as NumberField);
+      break;
 
     case 'checkbox':
-      return buildCheckbox(field as CheckboxField);
+      baseSchema = buildCheckbox(field as CheckboxField);
+      break;
 
     case 'select':
     case 'radio':
-      return buildChoice(field as ChoiceField);
+      baseSchema = buildChoice(field as ChoiceField);
+      break;
 
     case 'date':
-      return buildDate(field as DateField);
+      baseSchema = buildDate(field as DateField);
+      break;
 
     default: {
       const _never: never = field;
@@ -223,44 +353,197 @@ const buildForm = (field: FormField): z.ZodTypeAny => {
       throw new Error(getUnsupportedFieldMessage());
     }
   }
+
+  if (field.validateWith) {
+    baseSchema = field.validateWith(baseSchema);
+  }
+
+  return baseSchema;
 };
 
 export const generateZodSchema = (
-  schema: FormSchema,
-  custom?: z.ZodObject<z.ZodRawShape>,
-): z.ZodObject<z.ZodRawShape> => {
-  const shape = schema.reduce<Record<string, z.ZodTypeAny>>((acc, f) => {
-    acc[f.name] = buildForm(f);
+  schema: FormSchema | GroupedFormSchema | LegacyFormSchema,
+  custom?: z.AnyZodObject,
+  formValues: Record<string, any> = {},
+): z.ZodTypeAny => {
+  const fields: FormField[] = isLegacySchema(schema) ? schema : schema.fields;
+  const groups: FieldGroup[] = isLegacySchema(schema) ? [] : schema.groups || [];
+
+  const visibleFields = fields.filter((field) => {
+    if (!field.showWhen) return true;
+    return shouldShowField(field.showWhen, formValues);
+  });
+
+  const visibleGroups = groups.filter((group) => {
+    if (!group.showWhen) return true;
+    return shouldShowField(group.showWhen, formValues);
+  });
+
+  const shape = visibleFields.reduce<Record<string, z.ZodTypeAny>>((acc, field) => {
+    acc[field.name] = buildForm(field);
     return acc;
   }, {});
 
-  const auto = z.object(shape);
-  return custom ? auto.merge(custom) : auto;
+  const baseObject = z.object(shape);
+  let zodSchema: z.ZodTypeAny = baseObject;
+
+  const fieldsWithComparison = visibleFields.filter((field) => field.compareWith);
+  if (fieldsWithComparison.length > 0) {
+    fieldsWithComparison.forEach((field) => {
+      const comparison = field.compareWith!;
+      const targetField = visibleFields.find((f) => f.name === comparison.targetField);
+
+      if (targetField) {
+        zodSchema = zodSchema.refine(createComparisonValidator(field, comparison), {
+          message: getComparisonErrorMessage(comparison, field.label, targetField.label),
+          path: [field.name],
+        });
+      }
+    });
+  }
+
+  const requiredGroups = visibleGroups.filter((group) => group.required);
+  if (requiredGroups.length > 0) {
+    requiredGroups.forEach((group) => {
+      const groupFields = visibleFields.filter((field) => field.group === group.id);
+
+      zodSchema = zodSchema.refine(
+        (data) => groupFields.some((field) => !isVoid(data[field.name])),
+        {
+          message: (() => {
+            const currentLang = i18n.getCurrentLanguage();
+            const groupTitle = group.title || group.id;
+            switch (currentLang) {
+              case 'ko':
+                return `${groupTitle} 그룹에서 최소 하나의 항목은 입력해야 합니다`;
+              case 'en':
+                return `At least one field in ${groupTitle} group must be filled`;
+              case 'ja':
+                return `${groupTitle}グループで少なくとも1つの項目を入力する必要があります`;
+              default:
+                return `At least one field in ${groupTitle} group must be filled`;
+            }
+          })(),
+          path: [`group_${group.id}`],
+        },
+      );
+    });
+  }
+
+  if (custom) {
+    zodSchema = z.intersection(zodSchema, custom);
+  }
+
+  return zodSchema;
 };
 
-export const generateDefaultValues = (schema: FormSchema) =>
-  schema.reduce<Record<string, any>>((acc, f) => {
-    if (f.defaultValue !== undefined) {
-      acc[f.name] = f.defaultValue;
+export const generateDefaultValues = (
+  schema: FormSchema | GroupedFormSchema | LegacyFormSchema,
+  formValues: Record<string, any> = {},
+) => {
+  const fields: FormField[] = isLegacySchema(schema) ? schema : schema.fields;
+
+  const visibleFields = fields.filter((field) => {
+    if (!field.showWhen) return true;
+    return shouldShowField(field.showWhen, formValues);
+  });
+
+  return visibleFields.reduce<Record<string, any>>((acc, field) => {
+    if (field.defaultValue !== undefined) {
+      acc[field.name] = field.defaultValue;
       return acc;
     }
 
-    switch (f.type) {
+    switch (field.type) {
       case 'number':
-        acc[f.name] = undefined;
+        acc[field.name] = undefined;
         break;
       case 'checkbox': {
-        const cb = f as CheckboxField;
-        acc[f.name] = cb.options?.length ? [] : false;
+        const cb = field as CheckboxField;
+        acc[field.name] = cb.options?.length ? [] : false;
         break;
       }
       case 'select':
       case 'radio':
-        acc[f.name] = (f as any).multiple ? [] : '';
+        acc[field.name] = (field as any).multiple ? [] : '';
         break;
       default:
-        acc[f.name] = '';
+        acc[field.name] = '';
     }
 
     return acc;
   }, {});
+};
+
+export const validateSingleField = (
+  field: FormField,
+  value: any,
+  formValues: Record<string, any>,
+): { isValid: boolean; error?: string } => {
+  try {
+    if (field.showWhen && !shouldShowField(field.showWhen, formValues)) {
+      return { isValid: true };
+    }
+
+    const fieldSchema = buildForm(field);
+    const result = fieldSchema.safeParse(value);
+
+    if (!result.success) {
+      return {
+        isValid: false,
+        error: result.error.errors[0]?.message || '검증에 실패했습니다',
+      };
+    }
+
+    if (field.compareWith) {
+      const comparison = field.compareWith;
+      const isValid = createComparisonValidator(
+        field,
+        comparison,
+      )({
+        ...formValues,
+        [field.name]: value,
+      });
+
+      if (!isValid) {
+        const targetFieldLabel = comparison.targetField;
+        return {
+          isValid: false,
+          error: getComparisonErrorMessage(comparison, field.label, targetFieldLabel),
+        };
+      }
+    }
+
+    return { isValid: true };
+  } catch (error) {
+    return {
+      isValid: false,
+      error: '검증 중 오류가 발생했습니다',
+    };
+  }
+};
+
+export const getFieldsByGroup = (
+  schema: FormSchema | GroupedFormSchema | LegacyFormSchema,
+  formValues: Record<string, any> = {},
+): Record<string, FormField[]> => {
+  const fields: FormField[] = isLegacySchema(schema) ? schema : schema.fields;
+  const groups: FieldGroup[] = isLegacySchema(schema) ? [] : schema.groups || [];
+
+  const visibleFields = fields.filter((field) => {
+    if (!field.showWhen) return true;
+    return shouldShowField(field.showWhen, formValues);
+  });
+
+  const result: Record<string, FormField[]> = {};
+
+  result['__ungrouped'] = visibleFields.filter((field) => !field.group);
+
+  groups.forEach((group) => {
+    if (!group.showWhen || shouldShowField(group.showWhen, formValues)) {
+      result[group.id] = visibleFields.filter((field) => field.group === group.id);
+    }
+  });
+
+  return result;
+};

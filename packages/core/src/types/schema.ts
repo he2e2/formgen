@@ -17,6 +17,19 @@ export interface FieldOption {
   disabled?: boolean;
 }
 
+export interface FieldComparison {
+  type: 'equals' | 'not-equals' | 'greater-than' | 'less-than' | 'custom';
+  targetField: string;
+  message?: string;
+  customValidator?: (value: any, targetValue: any) => boolean;
+}
+
+export interface FieldCondition {
+  when: string;
+  is: any;
+  operator?: 'equals' | 'not-equals' | 'contains' | 'greater-than' | 'less-than';
+}
+
 export interface BaseField {
   name: string;
   label: string;
@@ -27,6 +40,10 @@ export interface BaseField {
   disabled?: boolean;
   defaultValue?: any;
   validateWith?: <T extends z.ZodTypeAny>(z: typeof import('zod'), base: T) => z.ZodTypeAny;
+  group?: string;
+  compareWith?: FieldComparison;
+  showWhen?: FieldCondition;
+  order?: number;
 }
 
 export interface TextField extends BaseField {
@@ -67,4 +84,28 @@ export interface DateField extends BaseField {
 
 export type FormField = TextField | NumberField | CheckboxField | ChoiceField | DateField;
 
-export type FormSchema = FormField[];
+export interface FieldGroup {
+  id: string;
+  title?: string;
+  description?: string;
+  collapsible?: boolean;
+  collapsed?: boolean;
+  showWhen?: FieldCondition;
+  className?: string;
+  order?: number;
+  required?: boolean;
+}
+
+export interface FormSchema {
+  fields: FormField[];
+  groups?: FieldGroup[];
+  settings?: {
+    validateOnChange?: boolean;
+    validateOnBlur?: boolean;
+    showOptionalLabel?: boolean;
+    groupLayout?: 'tabs' | 'sections' | 'accordion';
+  };
+}
+
+export type GroupedFormSchema = FormSchema;
+export type LegacyFormSchema = FormField[];

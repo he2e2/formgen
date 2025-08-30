@@ -10,8 +10,6 @@ import type {
   ChoiceField,
   DateField,
   FieldGroup,
-  FieldComparison,
-  FieldCondition,
 } from '../form-schema';
 import {
   isLegacySchema,
@@ -21,101 +19,9 @@ import {
   preprocessNumber,
   withRequired,
   shouldShowField,
+  createComparisonValidator,
+  getComparisonErrorMessage,
 } from '../form-schema';
-
-const createComparisonValidator = (field: FormField, comparison: FieldComparison) => {
-  return (data: Record<string, any>) => {
-    const value = data[field.name];
-    const targetValue = data[comparison.targetField];
-
-    if (isEmpty(value) || isEmpty(targetValue)) return true;
-
-    switch (comparison.type) {
-      case 'equals':
-        return value === targetValue;
-      case 'not-equals':
-        return value !== targetValue;
-      case 'greater-than':
-        return Number(value) > Number(targetValue);
-      case 'less-than':
-        return Number(value) < Number(targetValue);
-      case 'custom':
-        return comparison.customValidator ? comparison.customValidator(value, targetValue) : true;
-      default:
-        return true;
-    }
-  };
-};
-
-const getComparisonErrorMessage = (
-  comparison: FieldComparison,
-  fieldLabel: string,
-  targetFieldLabel: string,
-): string => {
-  if (comparison.message) {
-    return comparison.message;
-  }
-
-  const currentLang = i18n.getCurrentLanguage();
-
-  switch (comparison.type) {
-    case 'equals':
-      switch (currentLang) {
-        case 'ko':
-          return `${fieldLabel}이(가) ${targetFieldLabel}와(과) 일치하지 않습니다`;
-        case 'en':
-          return `${fieldLabel} does not match ${targetFieldLabel}`;
-        case 'ja':
-          return `${fieldLabel}が${targetFieldLabel}と一致しません`;
-        default:
-          return `${fieldLabel} does not match ${targetFieldLabel}`;
-      }
-    case 'not-equals':
-      switch (currentLang) {
-        case 'ko':
-          return `${fieldLabel}이(가) ${targetFieldLabel}와(과) 달라야 합니다`;
-        case 'en':
-          return `${fieldLabel} must be different from ${targetFieldLabel}`;
-        case 'ja':
-          return `${fieldLabel}は${targetFieldLabel}と異なる必要があります`;
-        default:
-          return `${fieldLabel} must be different from ${targetFieldLabel}`;
-      }
-    case 'greater-than':
-      switch (currentLang) {
-        case 'ko':
-          return `${fieldLabel}이(가) ${targetFieldLabel}보다 커야 합니다`;
-        case 'en':
-          return `${fieldLabel} must be greater than ${targetFieldLabel}`;
-        case 'ja':
-          return `${fieldLabel}は${targetFieldLabel}より大きい必要があります`;
-        default:
-          return `${fieldLabel} must be greater than ${targetFieldLabel}`;
-      }
-    case 'less-than':
-      switch (currentLang) {
-        case 'ko':
-          return `${fieldLabel}이(가) ${targetFieldLabel}보다 작아야 합니다`;
-        case 'en':
-          return `${fieldLabel} must be less than ${targetFieldLabel}`;
-        case 'ja':
-          return `${fieldLabel}は${targetFieldLabel}より小さい必要があります`;
-        default:
-          return `${fieldLabel} must be less than ${targetFieldLabel}`;
-      }
-    default:
-      switch (currentLang) {
-        case 'ko':
-          return `${fieldLabel} 검증에 실패했습니다`;
-        case 'en':
-          return `${fieldLabel} validation failed`;
-        case 'ja':
-          return `${fieldLabel}の検証に失敗しました`;
-        default:
-          return `${fieldLabel} validation failed`;
-      }
-  }
-};
 
 const buildText = (field: TextField) => {
   const { label, required, type, minLength, maxLength, pattern } = field;

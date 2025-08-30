@@ -12,50 +12,23 @@ import type {
   FieldGroup,
   FieldComparison,
   FieldCondition,
-} from '../types/schema';
-import { isLegacySchema } from '../types/schema';
-import { i18n } from '../constants/errors';
-import { DATE_REGEX } from '../constants/regex';
-
-const isVoid = (v: unknown) =>
-  v === undefined || v === null || (typeof v === 'string' && v.trim() === '');
-
-const preprocessNumber = (value: unknown) => (isVoid(value) ? undefined : Number(value));
-
-const withRequired = <T extends z.ZodTypeAny>(schema: T, label: string) =>
-  schema.refine((v) => !isVoid(v), {
-    message: i18n.getErrorMessage('required', label),
-  });
-
-const shouldShowField = (condition: FieldCondition, formValues: Record<string, any>): boolean => {
-  const targetValue = formValues[condition.when];
-  const expectedValue = condition.is;
-  const operator = condition.operator || 'equals';
-
-  switch (operator) {
-    case 'equals':
-      return targetValue === expectedValue;
-    case 'not-equals':
-      return targetValue !== expectedValue;
-    case 'contains':
-      return Array.isArray(targetValue)
-        ? targetValue.includes(expectedValue)
-        : String(targetValue).includes(String(expectedValue));
-    case 'greater-than':
-      return Number(targetValue) > Number(expectedValue);
-    case 'less-than':
-      return Number(targetValue) < Number(expectedValue);
-    default:
-      return true;
-  }
-};
+} from '../form-schema';
+import {
+  isLegacySchema,
+  i18n,
+  DATE_REGEX,
+  isEmpty,
+  preprocessNumber,
+  withRequired,
+  shouldShowField,
+} from '../form-schema';
 
 const createComparisonValidator = (field: FormField, comparison: FieldComparison) => {
   return (data: Record<string, any>) => {
     const value = data[field.name];
     const targetValue = data[comparison.targetField];
 
-    if (isVoid(value) || isVoid(targetValue)) return true;
+    if (isEmpty(value) || isEmpty(targetValue)) return true;
 
     switch (comparison.type) {
       case 'equals':
@@ -225,7 +198,7 @@ const buildChoice = (field: ChoiceField): z.ZodTypeAny => {
 
   schema = schema.refine(
     (v) => {
-      if (isVoid(v)) return true;
+      if (isEmpty(v)) return true;
       return multiple
         ? (v as string[]).every((val) => values.includes(val))
         : values.includes(v as string);
@@ -408,7 +381,7 @@ export const generateZodSchema = (
       const groupFields = visibleFields.filter((field) => field.group === group.id);
 
       zodSchema = zodSchema.refine(
-        (data) => groupFields.some((field) => !isVoid(data[field.name])),
+        (data) => groupFields.some((field) => !isEmpty(data[field.name])),
         {
           message: (() => {
             const currentLang = i18n.getCurrentLanguage();

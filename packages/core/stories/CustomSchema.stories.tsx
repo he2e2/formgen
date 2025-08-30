@@ -1,6 +1,6 @@
 import { FormGenerator } from '../src/components/FormGenerator';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { FormField } from '../src/types/schema';
+import type { FormField } from '../src/form-schema';
 import { z } from 'zod';
 
 const meta: Meta<typeof FormGenerator> = {

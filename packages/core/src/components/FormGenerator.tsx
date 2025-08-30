@@ -1,13 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ZodObject, ZodRawShape } from 'zod';
-
-import type { FormField } from '../types/schema';
-import { generateZodSchema, generateDefaultValues } from '../lib/zodGenerator';
-import { FormFieldRenderer } from './FormFieldRenderer';
-import { i18n, type SupportedLanguage } from '../constants/errors';
-import '../styles/generator.css';
 import { useEffect, useMemo } from 'react';
+
+import type { FormField, SupportedLanguage } from '../form-schema';
+import { generateZodSchema, generateDefaultValues, i18n } from '../form-schema';
+import { FormFieldRenderer } from './FormFieldRenderer';
+import '../styles/generator.css';
 
 interface Props {
   schema: FormField[];

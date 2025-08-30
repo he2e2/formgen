@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-import type { FormField } from '../types/schema';
+import type { FormField } from '../form-schema';
 
 const combineClasses = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(' ');
 const createCommonAria = (error?: string, name?: string) => ({

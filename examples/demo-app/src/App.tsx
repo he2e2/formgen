@@ -1,17 +1,80 @@
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from 'react-router-dom';
+import { z } from 'zod';
+
 import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';
 import '@formgen-he2e2/core/styles.css';
-import './index.css';
-import { z } from 'zod';
-import { Button, IconCard, AdvancedProfileForm } from './components';
 
-const schema: FormSchema = [
-  { type: 'text', name: 'username', label: '이름', required: true },
-  { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },
-];
+import './index.css';
+import { Button, IconCard } from './components';
+import { ExamplesPage } from './pages/examples/ExamplesPage';
+
+const schema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: 'text', name: 'username', label: '이름', required: true },
+    { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },
+  ],
+};
 
 const customSchema = z.object({
   username: z.string().min(3, '사용자 이름은 최소 3자 이상 입력하셔야 합니다.'),
 });
+
+const Navigation: React.FC = () => {
+  const location = useLocation();
+
+  return (
+    <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-2">
+              <img src="/logo.png" alt="FormGen" className="h-8 w-24" />
+            </Link>
+          </div>
+
+          <div className="flex items-center space-x-8">
+            <Link
+              to="/"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                location.pathname === '/'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              홈
+            </Link>
+            <Link
+              to="/examples"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                location.pathname === '/examples'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              예제
+            </Link>
+            <Button
+              className="btn-outline min-w-1/5 hover:bg-custom-gray"
+              onClick={() => {
+                window.open('https://github.com/he2e2/formgen', '_blank');
+              }}
+            >
+              GitHub
+            </Button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
 
 const Header = () => {
   return (
@@ -182,14 +245,27 @@ const Footer = () => {
   );
 };
 
-export default function App() {
+const HomePage = () => {
   return (
     <div className="bg-gradient-to-br from-blue-100 to-purple-100 w-full min-h-screen text-text-black font-family-pretendard">
       <Header />
       <Introduction />
       <DemoForm />
-      <AdvancedProfileForm />
       <Footer />
     </div>
+  );
+};
+
+export default function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/examples" element={<ExamplesPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }

@@ -1,34 +1,37 @@
-import type {
-  FormSchema,
-  GroupedFormSchema,
-  LegacyFormSchema,
-  FormField,
-  FieldGroup,
-} from '../types';
-import { isLegacySchema } from '../types';
-import { shouldShowField } from '../utils/conditionUtils';
+import type { FormSchema, FormField } from '../types';
+import { shouldShowField } from '../utils';
 
 export type GroupedFields = Record<string, FormField[]>;
 
 export const getFieldsByGroup = (
-  schema: FormSchema | GroupedFormSchema | LegacyFormSchema,
+  schema: FormSchema,
   formValues: Record<string, any> = {},
 ): GroupedFields => {
-  const fields: FormField[] = isLegacySchema(schema) ? schema : schema.fields;
-  const groups: FieldGroup[] = isLegacySchema(schema) ? [] : schema.groups || [];
-
-  const visibleFields = fields.filter((field) => {
-    if (!field.showWhen) return true;
-    return shouldShowField(field.showWhen, formValues);
-  });
-
   const result: GroupedFields = {};
 
-  result['__ungrouped'] = visibleFields.filter((field) => !field.group);
+  if (schema.ungroupedFields) {
+    const visibleUngroupedFields = schema.ungroupedFields.filter((field) => {
+      if (!field.showWhen) return true;
+      return shouldShowField(field.showWhen, formValues);
+    });
 
-  groups.forEach((group) => {
-    if (!group.showWhen || shouldShowField(group.showWhen, formValues)) {
-      result[group.id] = visibleFields.filter((field) => field.group === group.id);
+    if (visibleUngroupedFields.length > 0) {
+      result['__ungrouped'] = visibleUngroupedFields;
+    }
+  }
+
+  schema.groups.forEach((group) => {
+    if (group.showWhen && !shouldShowField(group.showWhen, formValues)) {
+      return;
+    }
+
+    const visibleGroupFields = group.fields.filter((field) => {
+      if (!field.showWhen) return true;
+      return shouldShowField(field.showWhen, formValues);
+    });
+
+    if (visibleGroupFields.length > 0) {
+      result[group.id] = visibleGroupFields;
     }
   });
 

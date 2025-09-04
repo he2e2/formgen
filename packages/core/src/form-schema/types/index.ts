@@ -40,7 +40,6 @@ export interface BaseField {
   disabled?: boolean;
   defaultValue?: any;
   validateWith?: (base: z.ZodTypeAny) => z.ZodTypeAny;
-  group?: string;
   compareWith?: FieldComparison;
   showWhen?: FieldCondition;
   order?: number;
@@ -88,6 +87,7 @@ export interface FieldGroup {
   id: string;
   title?: string;
   description?: string;
+  fields: FormField[];
   collapsible?: boolean;
   collapsed?: boolean;
   showWhen?: FieldCondition;
@@ -97,8 +97,8 @@ export interface FieldGroup {
 }
 
 export interface FormSchema {
-  fields: FormField[];
-  groups?: FieldGroup[];
+  groups: FieldGroup[];
+  ungroupedFields?: FormField[];
   settings?: {
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
@@ -107,13 +107,19 @@ export interface FormSchema {
   };
 }
 
-export type GroupedFormSchema = FormSchema;
-export type LegacyFormSchema = FormField[];
-
-export const isLegacySchema = (schema: any): schema is LegacyFormSchema => {
-  return Array.isArray(schema);
+export const getAllFields = (schema: FormSchema): FormField[] => {
+  const groupedFields = schema.groups.flatMap((group) => group.fields);
+  const ungroupedFields = schema.ungroupedFields || [];
+  return [...groupedFields, ...ungroupedFields];
 };
 
-export const isGroupedSchema = (schema: any): schema is GroupedFormSchema => {
-  return typeof schema === 'object' && 'fields' in schema;
+export const getFieldByName = (schema: FormSchema, name: string): FormField | undefined => {
+  return getAllFields(schema).find((field) => field.name === name);
+};
+
+export const getGroupByFieldName = (
+  schema: FormSchema,
+  fieldName: string,
+): FieldGroup | undefined => {
+  return schema.groups.find((group) => group.fields.some((field) => field.name === fieldName));
 };

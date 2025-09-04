@@ -55,7 +55,10 @@ type Story = StoryObj<typeof FormGenerator>;
 
 export const CombinedValidation: Story = {
   args: {
-    schema,
+    schema: {
+      groups: [],
+      ungroupedFields: schema,
+    },
     customSchema,
     onSubmit: (data) => {
       alert(JSON.stringify(data, null, 2));

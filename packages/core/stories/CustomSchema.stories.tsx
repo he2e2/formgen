@@ -72,7 +72,10 @@ const customValidation = z.object({
 
 export const CustomSchema: Story = {
   args: {
-    schema,
+    schema: {
+      groups: [],
+      ungroupedFields: schema,
+    },
     onSubmit: (data) => alert(JSON.stringify(data, null, 2)),
     customSchema: customValidation,
   },

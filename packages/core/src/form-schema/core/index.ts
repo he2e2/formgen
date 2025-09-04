@@ -1,4 +1,4 @@
-export { generateZodSchema } from './schemaGenerator';
+export { generateZodSchema, getVisibleFields, getVisibleGroups } from './schemaGenerator';
 export { generateDefaultValues } from './defaultValues';
 export { validateSingleField } from './validation';
 export type { ValidationResult } from './validation';

@@ -1,12 +1,6 @@
-import type {
-  FormSchema,
-  GroupedFormSchema,
-  LegacyFormSchema,
-  FormField,
-  CheckboxField,
-} from '../types';
-import { isLegacySchema } from '../types';
-import { shouldShowField } from '../utils/conditionUtils';
+import type { FormSchema, FormField, CheckboxField } from '../types';
+import { getAllFields } from '../types';
+import { shouldShowField } from '../utils';
 
 const getFieldDefaultValue = (field: FormField): any => {
   if (field.defaultValue !== undefined) {
@@ -38,12 +32,12 @@ const getFieldDefaultValue = (field: FormField): any => {
 };
 
 export const generateDefaultValues = (
-  schema: FormSchema | GroupedFormSchema | LegacyFormSchema,
+  schema: FormSchema,
   formValues: Record<string, any> = {},
 ): Record<string, any> => {
-  const fields: FormField[] = isLegacySchema(schema) ? schema : schema.fields;
+  const allFields = getAllFields(schema);
 
-  const visibleFields = fields.filter((field) => {
+  const visibleFields = allFields.filter((field) => {
     if (!field.showWhen) return true;
     return shouldShowField(field.showWhen, formValues);
   });

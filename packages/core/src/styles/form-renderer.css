@@ -1,0 +1,386 @@
+.formgen-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formgen-renderer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formgen-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.formgen-fieldset {
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.formgen-legend {
+  font-weight: bold;
+  padding: 0 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.formgen-label {
+  font-weight: 600;
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.formgen-label span {
+  font-weight: normal;
+  line-height: 1;
+  align-self: center;
+}
+
+.formgen-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.formgen-error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.formgen-button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.formgen-ungrouped-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formgen-group {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.formgen-group-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.formgen-group-description {
+  margin: 0 0 1rem 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.formgen-group--collapsible {
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.formgen-collapsible-button {
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.formgen-collapsible-button:hover {
+  background-color: #f1f5f9;
+}
+
+.formgen-collapsible-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+.formgen-collapsible-icon {
+  transition: transform 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.formgen-collapsible-content {
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.formgen-collapsible-content.collapsed {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.formgen-tabs {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.formgen-tabs-list {
+  display: flex;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.formgen-tab-button {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  background-color: transparent;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-right: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.formgen-tab-button:last-child {
+  border-right: none;
+}
+
+.formgen-tab-button:hover {
+  background-color: #f1f5f9;
+  color: #374151;
+}
+
+.formgen-tab-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.formgen-tab-button.active {
+  background-color: #ffffff;
+  color: #3b82f6;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.formgen-tab-panel {
+  padding: 1.5rem;
+  display: none;
+}
+
+.formgen-tab-panel.active {
+  display: block;
+}
+
+.formgen-tab-panel[hidden] {
+  display: none;
+}
+
+.formgen-accordion {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.formgen-accordion-item {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.formgen-accordion-item:last-child {
+  border-bottom: none;
+}
+
+.formgen-accordion-header {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.formgen-accordion-header:hover {
+  background-color: #f1f5f9;
+}
+
+.formgen-accordion-header:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+.formgen-accordion-icon {
+  transition: transform 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.formgen-accordion-content {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.formgen-accordion-content:not(.expanded) {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.formgen-accordion-content.expanded {
+  opacity: 1;
+}
+
+.formgen-accordion-content[hidden] {
+  display: none;
+}
+
+.formgen-group .formgen-field-wrapper,
+.formgen-ungrouped-section .formgen-field-wrapper,
+.formgen-tab-panel .formgen-field-wrapper,
+.formgen-accordion-content .formgen-field-wrapper,
+.formgen-collapsible-content .formgen-field-wrapper {
+  margin-bottom: 1rem;
+}
+
+.formgen-group .formgen-field-wrapper:last-child,
+.formgen-ungrouped-section .formgen-field-wrapper:last-child,
+.formgen-tab-panel .formgen-field-wrapper:last-child,
+.formgen-accordion-content .formgen-field-wrapper:last-child,
+.formgen-collapsible-content .formgen-field-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .formgen-tabs-list {
+    flex-direction: column;
+  }
+
+  .formgen-tab-button {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .formgen-tab-button:last-child {
+    border-bottom: none;
+  }
+
+  .formgen-tab-button.active {
+    border-bottom: none;
+    border-left: 3px solid #3b82f6;
+  }
+
+  .formgen-collapsible-button,
+  .formgen-accordion-header {
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+
+  .formgen-collapsible-content,
+  .formgen-accordion-content,
+  .formgen-tab-panel {
+    padding: 1rem;
+  }
+
+  .formgen-group {
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formgen-collapsible-content,
+  .formgen-accordion-content,
+  .formgen-collapsible-icon,
+  .formgen-accordion-icon,
+  .formgen-tab-button,
+  .formgen-collapsible-button,
+  .formgen-accordion-header {
+    transition: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .formgen-group {
+    border-color: #374151;
+    background-color: #1f2937;
+  }
+
+  .formgen-legend,
+  .formgen-label,
+  .formgen-group-title {
+    color: #f9fafb;
+  }
+
+  .formgen-group-description {
+    color: #9ca3af;
+  }
+
+  .formgen-tabs,
+  .formgen-accordion {
+    border-color: #374151;
+  }
+
+  .formgen-tabs-list,
+  .formgen-collapsible-button,
+  .formgen-accordion-header {
+    background-color: #374151;
+    border-color: #4b5563;
+  }
+
+  .formgen-tab-button,
+  .formgen-collapsible-button,
+  .formgen-accordion-header {
+    color: #d1d5db;
+  }
+
+  .formgen-tab-button:hover,
+  .formgen-collapsible-button:hover,
+  .formgen-accordion-header:hover {
+    background-color: #4b5563;
+  }
+
+  .formgen-tab-button.active {
+    background-color: #1f2937;
+    color: #60a5fa;
+    border-bottom-color: #60a5fa;
+  }
+
+  .formgen-tab-panel,
+  .formgen-accordion-content {
+    background-color: #1f2937;
+  }
+}

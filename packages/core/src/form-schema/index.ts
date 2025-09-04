@@ -3,6 +3,8 @@ export {
   generateDefaultValues,
   validateSingleField,
   getFieldsByGroup,
+  getVisibleFields,
+  getVisibleGroups,
 } from './core';
 
 export * from './types';
@@ -31,3 +33,5 @@ export { isEmpty, preprocessNumber, withRequired } from './utils/fieldUtils';
 export { shouldShowField } from './utils/conditionUtils';
 
 export { createComparisonValidator, getComparisonErrorMessage } from './comparison';
+
+export { useFormRenderer } from './hooks/useFormRenderer';

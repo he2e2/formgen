@@ -1,103 +1,8 @@
 import React, { useState } from 'react';
-import { categories, examples } from './data';
+import { examples } from './data';
 import type { Example } from './types';
-
-interface SidebarProps {
-  selectedExample: Example | null;
-  onSelectExample: (example: Example) => void;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({
-  selectedExample,
-  onSelectExample,
-}) => {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>([
-    'basic',
-  ]);
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId]
-    );
-  };
-
-  return (
-    <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto sticky top-0">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-900">예제 모음</h2>
-        <p className="text-sm text-gray-600 mt-1">
-          다양한 폼 예제를 확인해보세요
-        </p>
-      </div>
-
-      <div className="p-4">
-        {categories.map((category) => (
-          <div key={category.id} className="mb-4">
-            <button
-              onClick={() => toggleCategory(category.id)}
-              className="w-full flex items-center justify-between p-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-            >
-              <div>
-                <div className="font-semibold">{category.title}</div>
-                <div className="text-xs text-gray-500">
-                  {category.description}
-                </div>
-              </div>
-              <span className="formgen-accordion-icon">
-                {expandedCategories.includes(category.id) ? '▼' : '▶'}
-              </span>
-            </button>
-
-            {expandedCategories.includes(category.id) && (
-              <div className="mt-2 space-y-1">
-                {category.examples.map((example) => (
-                  <button
-                    key={example.id}
-                    onClick={() => onSelectExample(example)}
-                    className={`w-full text-left px-4 py-3 text-sm rounded-md transition-colors ${
-                      selectedExample?.id === example.id
-                        ? 'bg-blue-100 text-blue-800 border-l-4 border-blue-500'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
-                    }`}
-                  >
-                    <div className="font-medium">{example.title}</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {example.description}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-interface CodeBlockProps {
-  title: string;
-  code: string;
-}
-
-const CodeBlock: React.FC<CodeBlockProps> = ({ title, code }) => (
-  <div className="bg-gray-900 rounded-lg p-4 mt-4">
-    <div className="flex justify-between items-center mb-2">
-      <h4 className="text-sm font-medium text-gray-300">{title}</h4>
-      <button
-        onClick={() => navigator.clipboard.writeText(code)}
-        className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded bg-gray-800 hover:bg-gray-700"
-      >
-        복사
-      </button>
-    </div>
-    <pre className="text-sm text-gray-300 overflow-x-auto">
-      <code>{code}</code>
-    </pre>
-  </div>
-);
+import { ExamplesSidebar } from './ExamplesSidebar';
+import { CodeBlock } from '../../components';
 
 const getExampleCode = (exampleId: string) => {
   const codeExamples: Record<
@@ -298,7 +203,7 @@ export const ExamplesPage: React.FC = () => {
 
   return (
     <div className="flex bg-gray-50">
-      <Sidebar
+      <ExamplesSidebar
         selectedExample={selectedExample}
         onSelectExample={setSelectedExample}
       />

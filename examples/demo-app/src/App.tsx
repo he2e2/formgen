@@ -14,6 +14,7 @@ import '@formgen-he2e2/core/styles.css';
 import './index.css';
 import { Button, IconCard } from './components';
 import { ExamplesPage } from './pages/examples/ExamplesPage';
+import { GuidePage } from './pages/guide/GuidePage';
 
 const schema: FormSchema = {
   groups: [],
@@ -50,6 +51,16 @@ const Navigation: React.FC = () => {
               }`}
             >
               홈
+            </Link>
+            <Link
+              to="/guide"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                location.pathname === '/guide'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              가이드
             </Link>
             <Link
               to="/examples"
@@ -275,6 +286,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/examples" element={<ExamplesPage />} />
+          <Route path="/guide" element={<GuidePage />} />
         </Routes>
       </div>
     </Router>

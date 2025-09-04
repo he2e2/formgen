@@ -41,11 +41,14 @@ import { FormGenerator, type FormSchema } from "@formgen-he2e2/core";
 import "@formgen-he2e2/core/styles.css";
 import { z } from "zod";
 
-const schema: FormSchema = [
-  { type: "text", name: "username", label: "Username", required: true },
-  { type: "email", name: "email", label: "Email", required: true },
-  { type: "password", name: "password", label: "Password", required: true },
-];
+const schema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "username", label: "Username", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+  ],
+};
 
 function MyForm() {
   const handleSubmit = (data) => {
@@ -86,7 +89,7 @@ Supported Languages:
 
 ## 📚 Supported Field Types
 
-| Type     | Description        | Example             |
+| 타입     | 설명               | 예시                |
 | -------- | ------------------ | ------------------- |
 | text     | Basic text input   | Name, title, etc.   |
 | email    | Email input        | user@example.com    |
@@ -98,21 +101,34 @@ Supported Languages:
 | checkbox | Checkbox           | Multiple selection  |
 | date     | Date picker        | 2025-01-01          |
 
-> See [schema.ts](https://github.com/he2e2/formgen/blob/main/packages/core/src/types/schema.ts) for detailed interfaces.
+> See [Live Demo](https://formgen-xi.vercel.app/) for detailed interfaces.
 
 ## 🎨 Advanced Usage
 
 ### Custom Styling
 
 ```typescript
-const schema: FormSchema = [
-  {
-    type: "text",
-    name: "username",
-    label: "Username",
-    wrapperClassName: "custom-wrapper",
-  },
-];
+<FormGenerator
+  schema={schema}
+  className={{
+    form: "",
+    fieldWrapper: "",
+    label: "",
+    input: "",
+    error: "",
+    button: "",
+    group: "",
+    groupTitle: "",
+    groupDescription: "",
+    tabList: "",
+    tab: "",
+    tabActive: "",
+    tabInactive: "",
+    accordionItem: "",
+    accordionHeader: "",
+    accordionContent: "",
+  }}
+/>
 ```
 
 ### Complex Validation
@@ -133,37 +149,38 @@ const validationSchema = z.object({
 
 ### Registration Form
 
-> See more complex examples on the [demo site](https://formgen-xi.vercel.app/).
-
 ```typescript
-const signupSchema: FormSchema = [
-  { type: "text", name: "name", label: "Name", required: true },
-  { type: "email", name: "email", label: "Email", required: true },
-  { type: "password", name: "password", label: "Password", required: true },
-  {
-    type: "password",
-    name: "confirmPassword",
-    label: "Confirm Password",
-    required: true,
-  },
-  {
-    type: "select",
-    name: "age",
-    label: "Age Group",
-    options: [
-      { value: "10s", label: "Teens" },
-      { value: "20s", label: "20s" },
-      { value: "30s", label: "30s" },
-      { value: "40+", label: "40+" },
-    ],
-  },
-  {
-    type: "checkbox",
-    name: "terms",
-    label: "I agree to the terms of service",
-    required: true,
-  },
-];
+const signupSchema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "name", label: "Name", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+    {
+      type: "password",
+      name: "confirmPassword",
+      label: "Confirm Password",
+      required: true,
+    },
+    {
+      type: "select",
+      name: "age",
+      label: "Age Group",
+      options: [
+        { value: "10s", label: "Teens" },
+        { value: "20s", label: "20s" },
+        { value: "30s", label: "30s" },
+        { value: "40+", label: "40+" },
+      ],
+    },
+    {
+      type: "checkbox",
+      name: "terms",
+      label: "I agree to the terms of service",
+      required: true,
+    },
+  ],
+};
 ```
 
 <table align="center">

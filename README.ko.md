@@ -40,11 +40,14 @@ import { FormGenerator, type FormSchema } from "@formgen-he2e2/core";
 import "@formgen-he2e2/core/styles.css";
 import { z } from "zod";
 
-const schema: FormSchema = [
-  { type: "text", name: "username", label: "사용자명", required: true },
-  { type: "email", name: "email", label: "이메일", required: true },
-  { type: "password", name: "password", label: "비밀번호", required: true },
-];
+const schema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "username", label: "Username", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+  ],
+};
 
 const customValidation = z.object({
   username: z.string().min(3, "사용자명은 최소 3자 이상이어야 합니다"),
@@ -103,21 +106,34 @@ Supported Languages:
 | checkbox | 체크박스         | 다중 선택          |
 | date     | 날짜 선택        | 2025-01-01         |
 
-> 각 타입별 인터페이스는 [schema.ts](https://github.com/he2e2/formgen/blob/main/packages/core/src/types/schema.ts)에서 확인하실 수 있습니다.
+> 각 타입별 인터페이스는 [Live Demo](https://formgen-xi.vercel.app/)에서 확인하실 수 있습니다.
 
 ## 🎨 고급 사용법
 
 ### 커스텀 스타일링
 
 ```typescript
-const schema: FormSchema = [
-  {
-    type: "text",
-    name: "username",
-    label: "사용자명",
-    wrapperClassName: "custom-wrapper",
-  },
-];
+<FormGenerator
+  schema={schema}
+  className={{
+    form: "",
+    fieldWrapper: "",
+    label: "",
+    input: "",
+    error: "",
+    button: "",
+    group: "",
+    groupTitle: "",
+    groupDescription: "",
+    tabList: "",
+    tab: "",
+    tabActive: "",
+    tabInactive: "",
+    accordionItem: "",
+    accordionHeader: "",
+    accordionContent: "",
+  }}
+/>
 ```
 
 ### 복잡한 유효성 검사
@@ -141,29 +157,37 @@ const validationSchema = z.object({
 > 복잡한 예제는 [데모사이트](https://formgen-xi.vercel.app/)에서 확인하세요.
 
 ```typescript
-const signupSchema: FormSchema = [
-  { type: "text", name: "name", label: "이름", required: true },
-  { type: "email", name: "email", label: "이메일", required: true },
-  { type: "password", name: "password", label: "비밀번호", required: true },
-  {
-    type: "password",
-    name: "confirmPassword",
-    label: "비밀번호 확인",
-    required: true,
-  },
-  {
-    type: "select",
-    name: "age",
-    label: "연령대",
-    options: ["10대", "20대", "30대", "40대 이상"],
-  },
-  {
-    type: "checkbox",
-    name: "terms",
-    label: "이용약관에 동의합니다",
-    required: true,
-  },
-];
+const signupSchema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "name", label: "Name", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+    {
+      type: "password",
+      name: "confirmPassword",
+      label: "Confirm Password",
+      required: true,
+    },
+    {
+      type: "select",
+      name: "age",
+      label: "Age Group",
+      options: [
+        { value: "10s", label: "Teens" },
+        { value: "20s", label: "20s" },
+        { value: "30s", label: "30s" },
+        { value: "40+", label: "40+" },
+      ],
+    },
+    {
+      type: "checkbox",
+      name: "terms",
+      label: "I agree to the terms of service",
+      required: true,
+    },
+  ],
+};
 ```
 
 <table align="center">

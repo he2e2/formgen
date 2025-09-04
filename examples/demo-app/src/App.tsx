@@ -97,10 +97,13 @@ const Header = () => {
         <Button
           className="btn-outline min-w-1/5 hover:bg-custom-gray"
           onClick={() => {
-            window.open('https://github.com/he2e2/formgen', '_blank');
+            window.open(
+              'https://www.npmjs.com/package/@formgen-he2e2/core',
+              '_blank'
+            );
           }}
         >
-          Github에서 보기
+          @formgen-he2e2/core
         </Button>
       </div>
     </header>
@@ -111,32 +114,23 @@ const Introduction = () => {
   return (
     <section className="text-center py-24 px-16 w-full bg-white text-text-black rounded-t-3xl flex flex-col items-center gap-12">
       <h2 className="text-2xl font-medium">
-        카드를 클릭하면 Github 페이지로 이동합니다.
+        가이드 페이지에서 자세한 설명을 확인할 수 있습니다.
       </h2>
       <div className="grid grid-auto-fit gap-6 w-full">
         <IconCard
           icon="/Thunder.png"
           title="빠른 개발"
           description="스키마 정의만으로 완성되는 즉시 사용 가능한 폼 생성"
-          onClick={() => {
-            window.open('https://github.com/he2e2/formgen', '_blank');
-          }}
         />
         <IconCard
           icon="/Shield.png"
           title="유효성 검사"
           description="Zod 기반 타입 안전성과 실시간 검증으로 견고한 데이터 처리"
-          onClick={() => {
-            window.open('https://github.com/he2e2/formgen', '_blank');
-          }}
         />
         <IconCard
           icon="/Palette.png"
           title="커스터마이징"
           description="요소별 독립적인 클래스 적용으로 자유로운 디자인 구현"
-          onClick={() => {
-            window.open('https://github.com/he2e2/formgen', '_blank');
-          }}
         />
       </div>
     </section>

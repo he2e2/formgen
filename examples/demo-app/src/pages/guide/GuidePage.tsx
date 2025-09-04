@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GuideSidebar } from './GuideSideBar';
+import { GuideSidebar } from './GuideSidebar';
 import { guideCategories } from './data';
 import type { GuideSection } from './types';
 import {

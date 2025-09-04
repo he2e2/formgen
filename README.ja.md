@@ -40,11 +40,14 @@ yarn add @formgen-he2e2/core
 import { FormGenerator, type FormSchema } from "@formgen-he2e2/core";
 import "@formgen-he2e2/core/styles.css";
 
-const schema: FormSchema = [
-  { type: "text", name: "username", label: "ユーザー名", required: true },
-  { type: "email", name: "email", label: "メール", required: true },
-  { type: "password", name: "password", label: "パスワード", required: true },
-];
+const schema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "username", label: "Username", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+  ],
+};
 
 function MyForm() {
   const handleSubmit = (data) => {
@@ -97,21 +100,34 @@ Supported Languages:
 | checkbox | チェックボックス   | 複数選択           |
 | date     | 日付ピッカー       | 2025-01-01         |
 
-> 各タイプの詳細なインターフェースは [schema.ts](https://github.com/he2e2/formgen/blob/main/packages/core/src/types/schema.ts)で確認できます。
+> 各タイプの詳細なインターフェースは [Live Demo](https://formgen-xi.vercel.app/)で確認できます。
 
 ## 🎨 高度な使用方法
 
 ### カスタムスタイリング
 
 ```typescript
-const schema: FormSchema = [
-  {
-    type: "text",
-    name: "username",
-    label: "ユーザー名",
-    wrapperClassName: "custom-wrapper",
-  },
-];
+<FormGenerator
+  schema={schema}
+  className={{
+    form: "",
+    fieldWrapper: "",
+    label: "",
+    input: "",
+    error: "",
+    button: "",
+    group: "",
+    groupTitle: "",
+    groupDescription: "",
+    tabList: "",
+    tab: "",
+    tabActive: "",
+    tabInactive: "",
+    accordionItem: "",
+    accordionHeader: "",
+    accordionContent: "",
+  }}
+/>
 ```
 
 ### 複雑なバリデーション
@@ -135,29 +151,37 @@ const validationSchema = z.object({
 > 複雑な例は [デモサイト](https://formgen-xi.vercel.app/)で確認してください。
 
 ```typescript
-const signupSchema: FormSchema = [
-  { type: "text", name: "name", label: "名前", required: true },
-  { type: "email", name: "email", label: "メールアドレス", required: true },
-  { type: "password", name: "password", label: "パスワード", required: true },
-  {
-    type: "password",
-    name: "confirmPassword",
-    label: "パスワード確認",
-    required: true,
-  },
-  {
-    type: "select",
-    name: "age",
-    label: "年齢層",
-    options: ["10代", "20代", "30代", "40代以上"],
-  },
-  {
-    type: "checkbox",
-    name: "terms",
-    label: "利用規約に同意します",
-    required: true,
-  },
-];
+const signupSchema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: "text", name: "name", label: "Name", required: true },
+    { type: "email", name: "email", label: "Email", required: true },
+    { type: "password", name: "password", label: "Password", required: true },
+    {
+      type: "password",
+      name: "confirmPassword",
+      label: "Confirm Password",
+      required: true,
+    },
+    {
+      type: "select",
+      name: "age",
+      label: "Age Group",
+      options: [
+        { value: "10s", label: "Teens" },
+        { value: "20s", label: "20s" },
+        { value: "30s", label: "30s" },
+        { value: "40+", label: "40+" },
+      ],
+    },
+    {
+      type: "checkbox",
+      name: "terms",
+      label: "I agree to the terms of service",
+      required: true,
+    },
+  ],
+};
 ```
 
 <table align="center">

@@ -1,6 +1,6 @@
 import { FormGenerator } from '../src/components/FormGenerator';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { FormField } from '../src/types/schema';
+import type { FormField } from '../src/form-schema';
 import { z } from 'zod';
 
 const meta: Meta<typeof FormGenerator> = {
@@ -72,7 +72,10 @@ const customValidation = z.object({
 
 export const CustomSchema: Story = {
   args: {
-    schema,
+    schema: {
+      groups: [],
+      ungroupedFields: schema,
+    },
     onSubmit: (data) => alert(JSON.stringify(data, null, 2)),
     customSchema: customValidation,
   },

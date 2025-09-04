@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { generateDefaultValues } from '../src/lib/zodGenerator';
+import { generateDefaultValues } from '../src/form-schema';
 import type { FormSchema } from '../src/form-schema';
 
 describe('generateDefaultValues', () => {
   it('defaultValue가 주어지지 않았을 때 알맞은 defaultValue를 생성해야 한다.', () => {
     const schema: FormSchema = {
-      fields: [
+      groups: [],
+      ungroupedFields: [
         { type: 'text', name: 'title', label: '제목' },
         { type: 'number', name: 'price', label: '가격' },
         { type: 'checkbox', name: 'tos', label: '약관' },
@@ -43,7 +44,10 @@ describe('generateDefaultValues', () => {
 
   it('defaultValue가 주어졌을 때 주어진 defaultValue를 return 한다.', () => {
     const schema: FormSchema = {
-      fields: [{ type: 'text', name: 'email', label: '이메일', defaultValue: 'test@site.com' }],
+      groups: [],
+      ungroupedFields: [
+        { type: 'text', name: 'email', label: '이메일', defaultValue: 'test@site.com' },
+      ],
     };
     const defaults = generateDefaultValues(schema);
     expect(defaults.email).toBe('test@site.com');

@@ -59,164 +59,15 @@ export const SimpleFormExample = () => (
   />
 );
 
-export const complexValidationSchema: FormSchema = {
-  groups: [
-    {
-      id: 'security',
-      title: '보안 설정',
-      description: '안전한 계정을 위한 보안 정보를 입력해주세요',
-      fields: [
-        {
-          type: 'text',
-          name: 'username',
-          label: '사용자명',
-          required: true,
-          placeholder: '영문, 숫자, 언더스코어만 사용',
-          minLength: 4,
-          maxLength: 20,
-          order: 1,
-        },
-        {
-          type: 'password',
-          name: 'password',
-          label: '비밀번호',
-          required: true,
-          placeholder: '대소문자, 숫자, 특수문자 포함 8자 이상',
-          minLength: 8,
-          order: 2,
-        },
-        {
-          type: 'password',
-          name: 'passwordConfirm',
-          label: '비밀번호 확인',
-          required: true,
-          placeholder: '비밀번호를 다시 입력하세요',
-          compareWith: {
-            type: 'equals',
-            targetField: 'password',
-            message: '비밀번호가 일치하지 않습니다',
-          },
-          order: 3,
-        },
-      ],
-    },
-    {
-      id: 'contact',
-      title: '연락처 정보',
-      description: '본인 확인을 위한 연락처 정보입니다',
-      fields: [
-        {
-          type: 'text',
-          name: 'phoneNumber',
-          label: '휴대폰 번호',
-          required: true,
-          placeholder: '010-0000-0000',
-          order: 1,
-        },
-        {
-          type: 'text',
-          name: 'emergencyContact',
-          label: '비상연락처',
-          required: true,
-          placeholder: '010-0000-0000',
-          compareWith: {
-            type: 'not-equals',
-            targetField: 'phoneNumber',
-            message: '비상연락처는 본인 번호와 달라야 합니다',
-          },
-          order: 2,
-        },
-        {
-          type: 'email',
-          name: 'email',
-          label: '이메일',
-          required: true,
-          placeholder: 'example@domain.com',
-          order: 3,
-        },
-        {
-          type: 'email',
-          name: 'emailConfirm',
-          label: '이메일 확인',
-          required: true,
-          placeholder: '이메일을 다시 입력하세요',
-          compareWith: {
-            type: 'equals',
-            targetField: 'email',
-            message: '이메일이 일치하지 않습니다',
-          },
-          order: 4,
-        },
-      ],
-    },
-  ],
-  settings: {
-    validateOnChange: true,
-    validateOnBlur: true,
-    showOptionalLabel: true,
-    groupLayout: 'sections',
-  },
-};
-
-export const complexValidationZod = z
-  .object({
-    username: z
-      .string()
-      .min(4, '사용자명은 4자 이상이어야 합니다')
-      .max(20, '사용자명은 20자 이하여야 합니다')
-      .regex(/^[a-zA-Z0-9_]+$/, '영문, 숫자, 언더스코어만 사용 가능합니다'),
-    password: z
-      .string()
-      .min(8, '비밀번호는 8자 이상이어야 합니다')
-      .regex(/^(?=.*[a-z])/, '소문자를 포함해야 합니다')
-      .regex(/^(?=.*[A-Z])/, '대문자를 포함해야 합니다')
-      .regex(/^(?=.*\d)/, '숫자를 포함해야 합니다')
-      .regex(/^(?=.*[@$!%*?&])/, '특수문자(@$!%*?&)를 포함해야 합니다'),
-    passwordConfirm: z.string(),
-    phoneNumber: z
-      .string()
-      .regex(/^010-\d{4}-\d{4}$/, '010-0000-0000 형식으로 입력해주세요'),
-    emergencyContact: z
-      .string()
-      .regex(/^010-\d{4}-\d{4}$/, '010-0000-0000 형식으로 입력해주세요'),
-    email: z.string().email('올바른 이메일 형식이 아닙니다'),
-    emailConfirm: z.string().email('올바른 이메일 형식이 아닙니다'),
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: '비밀번호가 일치하지 않습니다',
-    path: ['passwordConfirm'],
-  })
-  .refine((data) => data.email === data.emailConfirm, {
-    message: '이메일이 일치하지 않습니다',
-    path: ['emailConfirm'],
-  })
-  .refine((data) => data.phoneNumber !== data.emergencyContact, {
-    message: '비상연락처는 본인 번호와 달라야 합니다',
-    path: ['emergencyContact'],
-  });
-
-export const ComplexValidationExample = () => (
-  <div className="max-w-2xl mx-auto">
-    <FormGenerator
-      schema={complexValidationSchema}
-      customSchema={complexValidationZod as any}
-      onSubmit={(data) => console.log('Complex Validation Form:', data)}
-      className={{
-        form: 'space-y-6',
-        group: 'bg-gray-50 border border-gray-200 rounded-lg p-6',
-        groupTitle: 'text-lg font-semibold text-gray-800 mb-2',
-        groupDescription: 'text-sm text-gray-600 mb-4',
-        fieldWrapper: 'mb-4',
-        label: 'block text-sm font-medium text-gray-700 mb-2',
-        input:
-          'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500',
-        error: 'mt-1 text-sm text-red-600 font-medium',
-        button:
-          'w-full bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 font-semibold',
-      }}
-    />
-  </div>
-);
+export const passwordConfirmZod = z.object({
+  password: z
+    .string()
+    .min(8, '비밀번호는 8자 이상이어야 합니다')
+    .regex(/^(?=.*[a-z])/, '소문자를 포함해야 합니다')
+    .regex(/^(?=.*[A-Z])/, '대문자를 포함해야 합니다')
+    .regex(/^(?=.*\d)/, '숫자를 포함해야 합니다')
+    .regex(/^(?=.*[@$!%*?&])/, '특수문자(@$!%*?&)를 포함해야 합니다'),
+});
 
 export const tabLayoutSchema: FormSchema = {
   groups: [
@@ -331,6 +182,36 @@ export const tabLayoutSchema: FormSchema = {
         },
       ],
     },
+    {
+      id: 'security',
+      title: '보안 설정',
+      description: '안전한 계정을 위한 보안 정보를 입력해주세요',
+      order: 4,
+      fields: [
+        {
+          type: 'password',
+          name: 'password',
+          label: '비밀번호',
+          required: true,
+          placeholder: '대소문자, 숫자, 특수문자 포함 8자 이상',
+          minLength: 8,
+          order: 1,
+        },
+        {
+          type: 'password',
+          name: 'passwordConfirm',
+          label: '비밀번호 확인',
+          required: true,
+          placeholder: '비밀번호를 다시 입력하세요',
+          compareWith: {
+            type: 'equals',
+            targetField: 'password',
+            message: '비밀번호가 일치하지 않습니다',
+          },
+          order: 2,
+        },
+      ],
+    },
   ],
   settings: {
     validateOnChange: true,
@@ -344,6 +225,7 @@ export const TabLayoutExample = () => (
   <div className="max-w-3xl mx-auto">
     <FormGenerator
       schema={tabLayoutSchema}
+      customSchema={passwordConfirmZod}
       onSubmit={(data) => console.log('Tab Layout Form:', data)}
     />
   </div>

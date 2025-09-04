@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { generateZodSchema } from '../src/lib/zodGenerator';
+import { generateZodSchema } from '../src/form-schema';
 import type { FormSchema } from '../src/form-schema';
 
 describe('generateZodSchema', () => {
   it('text form 유효성 검사를 통과한다.', () => {
     const schema: FormSchema = {
-      fields: [
+      groups: [],
+      ungroupedFields: [
         { type: 'text', name: 'title', label: '제목', required: true, minLength: 3, maxLength: 5 },
       ],
     };
@@ -27,7 +28,8 @@ describe('generateZodSchema', () => {
 
   it('number form 유효성 검사를 통과한다.', () => {
     const schema: FormSchema = {
-      fields: [
+      groups: [],
+      ungroupedFields: [
         { type: 'number', name: 'age', label: '나이', min: 10, max: 20, integer: true, step: 2 },
       ],
     };
@@ -41,7 +43,8 @@ describe('generateZodSchema', () => {
 
   it('checkbox form 유효성 검사를 통과한다.', () => {
     const schema: FormSchema = {
-      fields: [
+      groups: [],
+      ungroupedFields: [
         {
           type: 'checkbox',
           name: 'agree',
@@ -65,7 +68,8 @@ describe('generateZodSchema', () => {
 
   it('custom form 유효성 검사를 통과한다.', () => {
     const base: FormSchema = {
-      fields: [{ type: 'text', name: 'nickname', label: '닉네임' }],
+      groups: [],
+      ungroupedFields: [{ type: 'text', name: 'nickname', label: '닉네임' }],
     };
 
     const custom = z.object({

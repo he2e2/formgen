@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 h-screen overflow-y-auto sticky top-0">
+    <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto sticky top-0">
       <div className="p-6 border-b border-gray-200">
         <h2 className="text-xl font-bold text-gray-900">예제 모음</h2>
         <p className="text-sm text-gray-600 mt-1">
@@ -229,8 +229,18 @@ const getExampleCode = (exampleId: string) => {
     groupLayout: 'tabs',
   },
 };`,
+      validation: `export const passwordConfirmZod = z.object({
+  password: z
+  .string()
+  .min(8, '비밀번호는 8자 이상이어야 합니다')
+  .regex(/^(?=.*[a-z])/, '소문자를 포함해야 합니다')
+  .regex(/^(?=.*[A-Z])/, '대문자를 포함해야 합니다')
+  .regex(/^(?=.*\d)/, '숫자를 포함해야 합니다')
+  .regex(/^(?=.*[@$!%*?&])/, '특수문자(@$!%*?&)를 포함해야 합니다'),
+});`,
       component: `<FormGenerator
   schema={tabLayoutSchema}
+  customSchema={passwordConfirmZod}
   onSubmit={(data) => console.log('Tab Layout Form:', data)}
 />`,
     },
@@ -287,13 +297,13 @@ export const ExamplesPage: React.FC = () => {
     : null;
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       <Sidebar
         selectedExample={selectedExample}
         onSelectExample={setSelectedExample}
       />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1">
         {selectedExample ? (
           <div className="p-8">
             <div className="mb-8">

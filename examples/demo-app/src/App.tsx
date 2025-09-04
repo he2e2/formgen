@@ -148,63 +148,75 @@ const CodePreview = () => {
         <code></code>
       </pre>
       <pre data-prefix="5">
-        <code>{`const schema: FormSchema = [`}</code>
+        <code>{`const schema: FormSchema = {`}</code>
       </pre>
       <pre data-prefix="6">
-        <code>{`  { type: 'text', name: 'username', label: '이름', required: true },`}</code>
+        <code>{`  groups: [],`}</code>
       </pre>
       <pre data-prefix="7">
-        <code>{`  { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },`}</code>
+        <code>{`  ungroupedFields: [`}</code>
       </pre>
       <pre data-prefix="8">
-        <code>{`});`}</code>
+        <code>{`    { type: 'text', name: 'username', label: '이름', required: true },`}</code>
       </pre>
       <pre data-prefix="9">
-        <code></code>
+        <code>{`    { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },`}</code>
       </pre>
       <pre data-prefix="10">
-        <code>{`const customSchema = z.object({`}</code>
+        <code>{`  ],`}</code>
       </pre>
       <pre data-prefix="11">
-        <code>{`  username: z.string().min(3, '사용자 이름은 최소 3자 이상 입력하셔야 합니다.'),`}</code>
+        <code>{`};`}</code>
       </pre>
       <pre data-prefix="12">
-        <code>{`});`}</code>
-      </pre>
-      <pre data-prefix="13">
         <code></code>
       </pre>
+      <pre data-prefix="13">
+        <code>{`const customSchema = z.object({`}</code>
+      </pre>
       <pre data-prefix="14">
-        <code>{`export default function App() {`}</code>
+        <code>{`  username: z.string().min(3, '사용자 이름은 최소 3자 이상 입력하셔야 합니다.'),`}</code>
       </pre>
       <pre data-prefix="15">
-        <code>{`  return (`}</code>
+        <code>{`  agree: z.boolean().refine((val) => val, '약관에 동의해야 합니다.'),`}</code>
       </pre>
       <pre data-prefix="16">
-        <code>{`    <FormGenerator`}</code>
+        <code>{`});`}</code>
       </pre>
       <pre data-prefix="17">
-        <code>{`      schema={schema}`}</code>
+        <code></code>
       </pre>
       <pre data-prefix="18">
-        <code>{`      customSchema={customSchema}`}</code>
+        <code>{`export default function App() {`}</code>
       </pre>
       <pre data-prefix="19">
-        <code>{`      onSubmit={(data) => {`}</code>
+        <code>{`  return (`}</code>
       </pre>
       <pre data-prefix="20">
-        <code>{`        console.log('폼 제출 결과:', data);`}</code>
+        <code>{`    <FormGenerator`}</code>
       </pre>
       <pre data-prefix="21">
-        <code>{`      }}`}</code>
+        <code>{`      schema={schema}`}</code>
       </pre>
       <pre data-prefix="22">
-        <code>{`    />`}</code>
+        <code>{`      customSchema={customSchema}`}</code>
       </pre>
       <pre data-prefix="23">
-        <code>{`  );`}</code>
+        <code>{`      onSubmit={(data) => {`}</code>
       </pre>
       <pre data-prefix="24">
+        <code>{`        console.log('폼 제출 결과:', data);`}</code>
+      </pre>
+      <pre data-prefix="25">
+        <code>{`      }}`}</code>
+      </pre>
+      <pre data-prefix="26">
+        <code>{`    />`}</code>
+      </pre>
+      <pre data-prefix="27">
+        <code>{`  );`}</code>
+      </pre>
+      <pre data-prefix="28">
         <code>{`}`}</code>
       </pre>
     </div>
@@ -216,11 +228,10 @@ const DemoForm = () => {
     <section className="py-16 px-12 bg-custom-gray text-text-black flex flex-col items-center gap-16 w-full">
       <h2 className="hidden">데모 폼</h2>
       <p className="text-2xl font-medium">
-        왼쪽 폼에 입력하고 제출 버튼을 눌러보세요. 오른쪽에는 코드 미리보기가
-        있습니다.
+        폼을 작성하고 제출 버튼을 눌러보세요. 아래에는 코드 미리보기가 있습니다.
       </p>
-      <div className="w-full flex flex-col lg:flex-row gap-6">
-        <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
+      <div className="w-full flex flex-col gap-6">
+        <div className="w-full bg-white p-6 rounded-lg shadow-md">
           <FormGenerator
             schema={schema}
             customSchema={customSchema}
@@ -229,7 +240,7 @@ const DemoForm = () => {
             }}
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full">
           <CodePreview />
         </div>
       </div>

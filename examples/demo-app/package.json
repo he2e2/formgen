@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@formgen-he2e2/core": "^2.0.4",
-    "core^2.0.4": "link:@formgen-he2e2/core^2.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.8.2",

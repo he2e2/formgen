@@ -12,7 +12,7 @@ import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';
 import '@formgen-he2e2/core/styles.css';
 
 import './index.css';
-import { Button, IconCard } from './components';
+import { Button, CodeBlock, IconCard } from './components';
 import { ExamplesPage } from './pages/examples/ExamplesPage';
 import { GuidePage } from './pages/guide/GuidePage';
 
@@ -73,7 +73,7 @@ const Navigation: React.FC = () => {
               예제
             </Link>
             <Button
-              className="btn-outline min-w-1/5 hover:bg-custom-gray"
+              className="btn-outline min-w-1/5 hover:bg-custom-gray rounded-md"
               onClick={() => {
                 window.open('https://github.com/he2e2/formgen', '_blank');
               }}
@@ -137,96 +137,31 @@ const Introduction = () => {
   );
 };
 
-const CodePreview = () => {
-  return (
-    <div className="mockup-code w-full">
-      <pre data-prefix="1">
-        <code>{`import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';`}</code>
-      </pre>
-      <pre data-prefix="2">
-        <code>{`import '@formgen-he2e2/core/styles.css';`}</code>
-      </pre>
-      <pre data-prefix="3">
-        <code>{`import { z } from 'zod';`}</code>
-      </pre>
-      <pre data-prefix="4">
-        <code></code>
-      </pre>
-      <pre data-prefix="5">
-        <code>{`const schema: FormSchema = {`}</code>
-      </pre>
-      <pre data-prefix="6">
-        <code>{`  groups: [],`}</code>
-      </pre>
-      <pre data-prefix="7">
-        <code>{`  ungroupedFields: [`}</code>
-      </pre>
-      <pre data-prefix="8">
-        <code>{`    { type: 'text', name: 'username', label: '이름', required: true },`}</code>
-      </pre>
-      <pre data-prefix="9">
-        <code>{`    { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },`}</code>
-      </pre>
-      <pre data-prefix="10">
-        <code>{`  ],`}</code>
-      </pre>
-      <pre data-prefix="11">
-        <code>{`};`}</code>
-      </pre>
-      <pre data-prefix="12">
-        <code></code>
-      </pre>
-      <pre data-prefix="13">
-        <code>{`const customSchema = z.object({`}</code>
-      </pre>
-      <pre data-prefix="14">
-        <code>{`  username: z.string().min(3, '사용자 이름은 최소 3자 이상 입력하셔야 합니다.'),`}</code>
-      </pre>
-      <pre data-prefix="15">
-        <code>{`  agree: z.boolean().refine((val) => val, '약관에 동의해야 합니다.'),`}</code>
-      </pre>
-      <pre data-prefix="16">
-        <code>{`});`}</code>
-      </pre>
-      <pre data-prefix="17">
-        <code></code>
-      </pre>
-      <pre data-prefix="18">
-        <code>{`export default function App() {`}</code>
-      </pre>
-      <pre data-prefix="19">
-        <code>{`  return (`}</code>
-      </pre>
-      <pre data-prefix="20">
-        <code>{`    <FormGenerator`}</code>
-      </pre>
-      <pre data-prefix="21">
-        <code>{`      schema={schema}`}</code>
-      </pre>
-      <pre data-prefix="22">
-        <code>{`      customSchema={customSchema}`}</code>
-      </pre>
-      <pre data-prefix="23">
-        <code>{`      onSubmit={(data) => {`}</code>
-      </pre>
-      <pre data-prefix="24">
-        <code>{`        console.log('폼 제출 결과:', data);`}</code>
-      </pre>
-      <pre data-prefix="25">
-        <code>{`      }}`}</code>
-      </pre>
-      <pre data-prefix="26">
-        <code>{`    />`}</code>
-      </pre>
-      <pre data-prefix="27">
-        <code>{`  );`}</code>
-      </pre>
-      <pre data-prefix="28">
-        <code>{`}`}</code>
-      </pre>
-    </div>
-  );
+const exampleCode = `import { FormGenerator, type FormSchema } from '@formgen-he2e2/core';
+import '@formgen-he2e2/core/styles.css';
+import { z } from 'zod';
+const schema: FormSchema = {
+  groups: [],
+  ungroupedFields: [
+    { type: 'text', name: 'username', label: '이름', required: true },
+    { type: 'checkbox', name: 'agree', label: '약관 동의', required: true },
+  ],
 };
+const customSchema = z.object({
+  username: z.string().min(3, '사용자 이름은 최소 3자 이상 입력하셔야 합니다.'),
+  agree: z.boolean().refine((val) => val, '약관에 동의해야 합니다.'),
+});
+export default function App() {
+  return (
+    <FormGenerator
+      schema={schema}
+      customSchema={customSchema}
+      onSubmit={(data) => {
+        console.log('폼 제출 결과:', data);
+      }}
+    />
+  );
+}`;
 
 const DemoForm = () => {
   return (
@@ -246,7 +181,7 @@ const DemoForm = () => {
           />
         </div>
         <div className="w-full">
-          <CodePreview />
+          <CodeBlock title="기본 예제" code={exampleCode} />
         </div>
       </div>
     </section>

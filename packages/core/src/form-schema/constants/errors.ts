@@ -113,7 +113,11 @@ class PriorityI18n {
     this.autoDetectedLanguage = language;
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('preferred-language', language);
+      try {
+        localStorage.setItem('preferred-language', language);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     this.updateCurrentLanguage();

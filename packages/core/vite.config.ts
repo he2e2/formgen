@@ -46,9 +46,9 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'ReactJSXRuntime',
+          'react/jsx-runtime': 'jsxRuntime',
           'react-hook-form': 'ReactHookForm',
-          '@hookform/resolvers/zod': 'HookFormResolversZod',
+          '@hookform/resolvers/zod': 'hookformResolvers',
           zod: 'Zod',
         },
         compact: true,
@@ -101,8 +101,5 @@ export default defineConfig({
       'dynamic-import': true,
       'import-meta': true,
     },
-  },
-  optimizeDeps: {
-    exclude: ['react', 'react-dom', 'react-hook-form', 'zod'],
   },
 });

@@ -1,10 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, lazy, Suspense } from 'react';
 import type { Control, FieldErrors } from 'react-hook-form';
 
 import type { FormSchema } from '../form-schema';
 import { useFormRenderer } from '../form-schema';
 import { GroupFields, SectionGroup, CollapsibleGroup } from './GroupComponents';
-import { TabsLayout, AccordionLayout } from './LayoutComponents';
 
 export interface FormRendererProps {
   schema: FormSchema;
@@ -36,6 +35,13 @@ export interface FormRendererProps {
     fieldGroup?: string;
   };
 }
+
+const TabsLayout = lazy(() =>
+  import('./LayoutComponents').then((m) => ({ default: m.TabsLayout })),
+);
+const AccordionLayout = lazy(() =>
+  import('./LayoutComponents').then((m) => ({ default: m.AccordionLayout })),
+);
 
 export const FormRenderer: React.FC<FormRendererProps> = memo(
   ({ schema, control, errors, showOptionalLabel = false, className = {} }) => {
@@ -91,30 +97,34 @@ export const FormRenderer: React.FC<FormRendererProps> = memo(
       switch (groupLayout) {
         case 'tabs':
           return (
-            <TabsLayout
-              groups={visibleGroups}
-              groupedFields={groupedFields}
-              control={control}
-              errors={errors}
-              showOptionalLabel={showOptionalLabel}
-              className={className}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
+            <Suspense fallback={<div className="formgen-loading">Loading...</div>}>
+              <TabsLayout
+                groups={visibleGroups}
+                groupedFields={groupedFields}
+                control={control}
+                errors={errors}
+                showOptionalLabel={showOptionalLabel}
+                className={className}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+            </Suspense>
           );
 
         case 'accordion':
           return (
-            <AccordionLayout
-              groups={visibleGroups}
-              groupedFields={groupedFields}
-              control={control}
-              errors={errors}
-              showOptionalLabel={showOptionalLabel}
-              className={className}
-              expandedGroups={expandedGroups}
-              toggleGroup={toggleAccordion}
-            />
+            <Suspense fallback={<div className="formgen-loading">Loading...</div>}>
+              <AccordionLayout
+                groups={visibleGroups}
+                groupedFields={groupedFields}
+                control={control}
+                errors={errors}
+                showOptionalLabel={showOptionalLabel}
+                className={className}
+                expandedGroups={expandedGroups}
+                toggleGroup={toggleAccordion}
+              />
+            </Suspense>
           );
 
         case 'sections':
